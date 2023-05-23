@@ -7,7 +7,6 @@ import PropTypes from 'prop-types';
 import Typography from '@mui/material/Typography';
 
 import { styled } from '@mui/material/styles';
-import TabContext from '@mui/lab/TabContext';
 import Container from "react-bootstrap/esm/Container";
 import CarReceive from "./CarReceive/CarReive";
 import ApplianceReive from "./ApplianceReceive/ApplianceReive";
@@ -71,7 +70,7 @@ function TabPanel(props) {
       fontSize: theme.typography.pxToRem(15),
       marginRight: theme.spacing(1),
       color: '#141414',
-      fontWeight:'400',
+      fontWeight:'500',
       '&.Mui-selected': {
         color: '#0c828f',
       },
