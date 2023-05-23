@@ -1,0 +1,16 @@
+###
+GET http://localhost:8000/api/cars
+
+###
+POST http://localhost:8000/api/cars HTTP/1.1
+content-type: application/json
+
+{
+	"TenHieuXe" : "hihi"
+}
+
+###
+PUT http://localhost:8000/api/cars
+
+###
+DELETE http://localhost:8000/api/cars/2
