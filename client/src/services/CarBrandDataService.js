@@ -1,5 +1,5 @@
 import axios from "axios";
-import { BASE_URL } from "../../config/config";
+import { BASE_URL } from "../config/config";
 
 class CarBrandDataService {
     getAllCars() {
@@ -14,8 +14,8 @@ class CarBrandDataService {
     createCar(TenHieuXe){
         return axios.post(`${BASE_URL}/api/cars`, ({ TenHieuXe }))
     }
-    updateCar(){
-        return axios.put(`${BASE_URL}/api/cars`)
+    updateCar(data){
+        return axios.put(`${BASE_URL}/api/cars`,data)
     }
     // Xóa HieuXe bằng MaHieuXe
     deleteCar(MaHieuXe) {

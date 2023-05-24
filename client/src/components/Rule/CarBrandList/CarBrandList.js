@@ -2,7 +2,7 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import { MdDeleteForever,MdLibraryAdd } from 'react-icons/md'
 import { BiEdit } from 'react-icons/bi'
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Container from 'react-bootstrap/esm/Container';
 import Form from 'react-bootstrap/Form';
 import Button from '@mui/material/Button';
@@ -12,8 +12,10 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import './CarBrandList.css'
-export default function CarBrandList(props) {
-  const HxeList = props.Hxe;
+import CarBrandDataService from '../../../services/CarBrandDataService';
+export default function CarBrandList() {
+  const [reload,setReload] = useState(false)
+  const [HxeList,setHxeList] = useState([])
   const [openAdd, setOpenAdd] = React.useState(false);
 
   const [openDelete, setOpenDelete] = React.useState(false);
@@ -21,13 +23,26 @@ export default function CarBrandList(props) {
   const [openEdit, setOpenEdit] = React.useState(false);
   const [HxeOnEdit, setHxeOnEdit] = React.useState({});
   const [tenHxeNew, setTenHxeNew] = React.useState('');
+  useEffect(()=>{
+    CarBrandDataService.getAllCars()
+    .then((data)=>
+      setHxeList(data.data)
+    )
 
+  },[reload])
   const handleClickOpenAdd = () => {
     setOpenAdd(true);
   };
   const handleCloseAdd = () => {
     setOpenAdd(false);
   };
+  const handleCloseAddAndUpdate = () => {
+    CarBrandDataService.createCar(tenHxeNew)
+    setOpenAdd(false);
+    setTimeout(()=>{setReload(!reload);},300)
+    
+  };
+
 
   const handleClickOpenEdit = (item) => {
     setOpenEdit(true);
@@ -41,16 +56,24 @@ export default function CarBrandList(props) {
     setOpenEdit(false);
 
   }
-  const handleClickOpenDelete = () => {
-    setOpenDelete(true);
-  };
+  
+  
   const handleTenHxeChange = e => {
     const _tenHxeNew = e.target.value;
     setTenHxeNew(_tenHxeNew);
     console.log(tenHxeNew)
   }
+  //Xoa hieu xe
+  const handleClickOpenDelete = () => {
+    setOpenDelete(true);
+  };
   const handleCloseDelete = () => {
     setOpenDelete(false);
+  };
+  const handleCloseDeleteUpdate = () => {
+    CarBrandDataService.deleteCar(HxeOnEdit.MaHieuXe)
+    setOpenDelete(false);
+    setTimeout(()=>{setReload(!reload);},200)
   };
   return (
     <div className='CarBrandList-container'>
@@ -79,10 +102,10 @@ export default function CarBrandList(props) {
             {item.TenHieuXe}
           </Col>
           <Col xs='3' style={{borderLeft: 'black 0.5px solid' }}>
-            <BiEdit className='CarBrand-edit-btn' style={{ width: '25px', height: '25px' }} onClick={() => { handleClickOpenEdit(item); setHxeOnEdit(item) }} />
+            <BiEdit className='CarBrand-edit-btn' style={{ width: '25px', height: '25px' }} onClick={() => { handleClickOpenEdit(); setHxeOnEdit(item) }} />
           </Col>
           <Col xs='3' style={{borderLeft: 'black 0.5px solid' }}>
-            <MdDeleteForever className='CarBrand-detele-btn' style={{ width: '25px', height: '25px' }} onClick={handleClickOpenDelete} />
+            <MdDeleteForever className='CarBrand-detele-btn' style={{ width: '25px', height: '25px' }} onClick={()=>{handleClickOpenDelete();setHxeOnEdit(item)}} />
           </Col>
         </Row>)}
         </div>
@@ -111,7 +134,7 @@ export default function CarBrandList(props) {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseAdd}>Hủy bỏ</Button>
-          <Button onClick={handleCloseAdd} autoFocus>
+          <Button onClick={handleCloseAddAndUpdate} autoFocus>
             Thêm Hiệu xe
           </Button>
         </DialogActions>
@@ -126,7 +149,7 @@ export default function CarBrandList(props) {
 
         <DialogActions>
           <Button onClick={handleCloseDelete}>Hủy bỏ</Button>
-          <Button onClick={handleCloseDelete} autoFocus>
+          <Button onClick={handleCloseDeleteUpdate} autoFocus>
             Xóa hiệu xe
           </Button>
         </DialogActions>

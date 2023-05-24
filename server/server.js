@@ -3,7 +3,8 @@ import cors from "cors";
 import { connectDB } from "./db/connection.js";
 import { PORT } from "./config/config.js";
 import {
-  carsRoutes,
+  carBrandsRoutes,
+  paraRoutes,
 } from "./routes/index.js";
 
 const start = async () => {
@@ -15,7 +16,8 @@ const start = async () => {
   app.use(cors());
 
   // Routes
-  app.use("/api/cars", carsRoutes);
+  app.use("/api/cars-brand", carBrandsRoutes);
+  app.use("/api/para", paraRoutes);
 
   // Start server
   app.listen(PORT, () => {
