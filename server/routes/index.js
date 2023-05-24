@@ -1,1 +1,1 @@
-export { default as carsRoutes } from './carsRoutes.js';
+export { default as carBrandsRoutes } from './carBrandsRoutes.js';
