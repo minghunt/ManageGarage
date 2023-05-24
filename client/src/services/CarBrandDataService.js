@@ -2,23 +2,17 @@ import axios from "axios";
 import { BASE_URL } from "../config/config";
 
 class CarBrandDataService {
-    getAllCars() {
+    getAllCarBrands() {
         return axios.get(`${BASE_URL}/api/cars-brand`)
     }
-    getCarById(id){
-        return axios.get(`${BASE_URL}/api/cars/${id}`)
-    } 
-    getCarByName(TenHieuXe){
-        return axios.get(`${BASE_URL}/api/cars/name/${TenHieuXe}`)
-    }
-    createCar(TenHieuXe){
+    createCarBrand(TenHieuXe){
         return axios.post(`${BASE_URL}/api/cars-brand`, ({ TenHieuXe }))
     }
-    updateCar(data){
-        return axios.put(`${BASE_URL}/api/cars`,data)
+    updateCarBrand(data){
+        return axios.put(`${BASE_URL}/api/cars-brand`,data)
     }
     // Xóa HieuXe bằng MaHieuXe
-    deleteCar(MaHieuXe) {
+    deleteCarBrand(MaHieuXe) {
         return axios.delete(`${BASE_URL}/api/cars-brand/${MaHieuXe}`)
     }
 }

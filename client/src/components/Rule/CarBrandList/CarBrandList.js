@@ -6,6 +6,7 @@ import React, { useEffect, useState } from "react";
 import Container from 'react-bootstrap/esm/Container';
 import Form from 'react-bootstrap/Form';
 import Button from '@mui/material/Button';
+import InputGroup from 'react-bootstrap/InputGroup';
 
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -15,7 +16,12 @@ import './CarBrandList.css'
 import CarBrandDataService from '../../../services/CarBrandDataService';
 export default function CarBrandList() {
   const [reload,setReload] = useState(false)
+
   const [HxeList,setHxeList] = useState([])
+  const [openWarn, setOpenWarn] = React.useState(false);
+  const handleCloseWarn = () => {
+    setOpenWarn(false);
+  };
   const [openAdd, setOpenAdd] = React.useState(false);
 
   const [openDelete, setOpenDelete] = React.useState(false);
@@ -23,8 +29,10 @@ export default function CarBrandList() {
   const [openEdit, setOpenEdit] = React.useState(false);
   const [HxeOnEdit, setHxeOnEdit] = React.useState({});
   const [tenHxeNew, setTenHxeNew] = React.useState('');
+  const [tenHxeEdit, setTenHxeEdit] = React.useState('');
+
   useEffect(()=>{
-    CarBrandDataService.getAllCars()
+    CarBrandDataService.getAllCarBrands()
     .then((data)=>
       setHxeList(data.data)
     )
@@ -35,12 +43,20 @@ export default function CarBrandList() {
   };
   const handleCloseAdd = () => {
     setOpenAdd(false);
+    setTenHxeNew('')
+
   };
   const handleCloseAddAndUpdate = () => {
-    CarBrandDataService.createCar(tenHxeNew)
+    if(tenHxeNew!==''&&tenHxeNew!==null){
+    CarBrandDataService.createCarBrand(tenHxeNew)
     setOpenAdd(false);
-    setTimeout(()=>{setReload(!reload);},300)
-    
+    setTimeout(()=>{setReload(!reload);},300)}
+    else {
+      setOpenWarn(true);
+
+    }
+    setTenHxeNew('')
+
   };
 
 
@@ -49,11 +65,26 @@ export default function CarBrandList() {
   };
   const handleCloseEdit = () => {
     setOpenEdit(false);
+    setTenHxeNew('')
+
   };
   const handleCloseEditAndUpdate = () => {
-    const index = HxeList.findIndex(item => item._id === HxeOnEdit._id);
-    HxeList[index].TenHieuXe = tenHxeNew;
+    // const index = HxeList.findIndex(item => item._id === HxeOnEdit._id);
+    // HxeList[index].TenHieuXe = tenHxeNew;
+    if (tenHxeNew!==''){
+    let _hxe=HxeOnEdit;
+    _hxe.TenHieuXe=tenHxeNew;
+    setHxeOnEdit(_hxe);
+
+    CarBrandDataService.updateCarBrand(_hxe)
+    console.log(HxeOnEdit)
     setOpenEdit(false);
+    setTimeout(()=>{setReload(!reload);},300)
+    }
+    else {
+      setOpenWarn(true);
+    }
+    setTenHxeNew('')
 
   }
   
@@ -69,9 +100,10 @@ export default function CarBrandList() {
   };
   const handleCloseDelete = () => {
     setOpenDelete(false);
+
   };
   const handleCloseDeleteUpdate = () => {
-    CarBrandDataService.deleteCar(HxeOnEdit.MaHieuXe)
+    CarBrandDataService.deleteCarBrand(HxeOnEdit.MaHieuXe)
     setOpenDelete(false);
     setTimeout(()=>{setReload(!reload);},200)
   };
@@ -128,7 +160,7 @@ export default function CarBrandList() {
           <Form>
             <Form.Group className="mb-3" >
               <Form.Label>Nhập tên Hiệu xe muốn thêm</Form.Label>
-              <Form.Control as="textarea" placeholder='Ví dụ: Posch' onChange={handleTenHxeChange} />
+              <Form.Control as="textarea" defaultValue={''} onChange={handleTenHxeChange} required='true'/>
             </Form.Group>
           </Form>
         </DialogContent>
@@ -165,7 +197,8 @@ export default function CarBrandList() {
           <Form>
             <Form.Group className="mb-3" >
               <Form.Label>Nhập tên Hiệu xe mới</Form.Label>
-              <Form.Control as="textarea" placeholder={HxeOnEdit.TenHieuXe} onChange={handleTenHxeChange} />
+              <Form.Control type="text" defaultValue={HxeOnEdit.TenHieuXe} onChange={handleTenHxeChange} aria-describedby="inputGroupPrepend"
+              required/>
             </Form.Group>
           </Form>
         </DialogContent>
@@ -174,6 +207,17 @@ export default function CarBrandList() {
           <Button onClick={handleCloseEditAndUpdate} autoFocus>
             Cập nhật
           </Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog className='Cảnh báo'
+        open={openWarn}
+        onClose={handleCloseWarn}
+      >
+        <DialogTitle >
+          {"Bạn chưa nhập tên Hiệu xe"}
+        </DialogTitle>
+        <DialogActions>
+          <Button  onClick={handleCloseWarn}>OK</Button>
         </DialogActions>
       </Dialog>
     </div>

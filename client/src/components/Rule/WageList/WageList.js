@@ -1,8 +1,8 @@
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
-import { MdDeleteForever,MdLibraryAdd } from 'react-icons/md'
+import { MdDeleteForever, MdLibraryAdd } from 'react-icons/md'
 import { BiEdit } from 'react-icons/bi'
-import React from "react";
+import React, { useEffect } from "react";
 import Container from 'react-bootstrap/esm/Container';
 import Form from 'react-bootstrap/Form';
 import Button from '@mui/material/Button';
@@ -12,21 +12,46 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import './WageList.css'
+import TienCongDataService from '../../../services/TienCongDataService';
 export default function WageList(props) {
-  const HxeList = props.Hxe;
+  const [reload, setReload] = React.useState(false);
+  const [openWarn, setOpenWarn] = React.useState(false);
+  const [WageList, setWageList] = React.useState([]);
+
   const [openAdd, setOpenAdd] = React.useState(false);
 
   const [openDelete, setOpenDelete] = React.useState(false);
 
   const [openEdit, setOpenEdit] = React.useState(false);
-  const [HxeOnEdit, setHxeOnEdit] = React.useState({});
-  const [tenHxeNew, setTenHxeNew] = React.useState('');
+  const [TCOnEdit, setTCOnEdit] = React.useState({});
+  const [tenTC, setTenTC] = React.useState('');
+  const [giaTC, setGiaTC] = React.useState(0);
 
   const handleClickOpenAdd = () => {
     setOpenAdd(true);
   };
   const handleCloseAdd = () => {
     setOpenAdd(false);
+    setGiaTC(0); setTenTC('')
+
+  };
+  const handleCloseAddAndUpdate = () => {
+    if (tenTC !== '' && giaTC > 10000) {
+      let Wage = {
+        TienCong: giaTC,
+        MoTa: tenTC
+      }
+      TienCongDataService.createTienCong(Wage)
+      console.log(Wage)
+      setOpenAdd(false);
+      setTimeout(() => { setReload(!reload); }, 500)
+    }
+    else {
+      setOpenWarn(true);
+
+    }
+    //setGiaTC(0); setTenTC('')
+
   };
 
   const handleClickOpenEdit = (item) => {
@@ -34,29 +59,63 @@ export default function WageList(props) {
   };
   const handleCloseEdit = () => {
     setOpenEdit(false);
+    setGiaTC(0); setTenTC('')
+
   };
   const handleCloseEditAndUpdate = () => {
-    const index = HxeList.findIndex(item => item._id === HxeOnEdit._id);
-    HxeList[index].TenHieuXe = tenHxeNew;
-    setOpenEdit(false);
-
+    if (tenTC !== '' && giaTC > 10000) {
+      let _TCOnEdit = TCOnEdit;
+      _TCOnEdit.MoTa = tenTC;
+      _TCOnEdit.TienCong = giaTC;
+      setOpenEdit(_TCOnEdit)
+      TienCongDataService.updateTienCong(_TCOnEdit)
+      setOpenEdit(false);
+      setTimeout(() => { setReload(!reload); }, 200)
+    }
+    else {
+      setOpenWarn(true);
+    }
+    setGiaTC(0);setTenTC('')
   }
+
   const handleClickOpenDelete = () => {
     setOpenDelete(true);
   };
-  const handleTenHxeChange = e => {
-    const _tenHxeNew = e.target.value;
-    setTenHxeNew(_tenHxeNew);
-    console.log(tenHxeNew)
-  }
+
   const handleCloseDelete = () => {
     setOpenDelete(false);
   };
+  const handleCloseDeleteAndUpdate = () => {
+    TienCongDataService.deleteTienCong(TCOnEdit.MaTienCong)
+    setOpenDelete(false);
+
+    setTimeout(() => { setReload(!reload); }, 200)
+  };
+
+  const handleTenTCChange = e => {
+    const _tenTC = e.target.value;
+    setTenTC(_tenTC);
+  }
+  const handleGiaTCChange = e => {
+    const _giaTC = e.target.value;
+    setGiaTC(_giaTC);
+  }
+  const handleCloseWarn = e => {
+    setOpenWarn(0)
+  }
+
+  useEffect(() => {
+    TienCongDataService.getAllTienCong()
+      .then((data) => {
+        setWageList(data.data)
+      })
+  }, [reload])
+
   return (
     <div className='CarBrandList-container'>
       <Container style={{ width: '100%' }}>
-        <Row style={{ textAlign: 'center', paddingBottom: '10px', fontWeight: '700',paddingRight:'22px'}}>
-          <Col xs='1' style={{paddingRight:'5px'}}>
+        <Row style={{ textAlign: 'center', paddingBottom: '10px', fontWeight: '700', paddingRight: '22px' }}>
+          <Col xs='1' style={{ paddingRight: '5px' }}>
             STT
           </Col>
           <Col xs='5'>
@@ -65,58 +124,62 @@ export default function WageList(props) {
             Giá tiền
           </Col>
           <Col xs='1'>
-            Sửa 
+            Sửa
           </Col>
           <Col xs='1'>
-            Xóa 
+            Xóa
           </Col>
 
         </Row>
-        <div style={{ maxHeight:"500px",overflow:"hidden",overflowY: 'visible',paddingRight:'5px'}}>
-        {HxeList.map((item, key) => <Row style={{ textAlign: 'center', padding: '8xp 10px', lineHeight:'27px',borderBottom: 'black 0.5px solid' }}>
-          <Col xs='1'  style={{borderLeft: 'black 0.5px solid' ,paddingRight:'5px'}}>
-            {key + 1}
-          </Col>
-          <Col xs='5' style={{borderLeft: 'black 0.5px solid' }}>
-            {item.TenHieuXe}
-          </Col><Col xs='4' style={{borderLeft: 'black 0.5px solid' }}>
-            {item.TienCong.toLocaleString('vi', { style: 'currency', currency: 'VND' })}
-          </Col>
-          <Col xs='1' style={{borderLeft: 'black 0.5px solid' }}>
-            <BiEdit className='CarBrand-edit-btn' style={{ width: '25px', height: '25px' }} onClick={() => { handleClickOpenEdit(item); setHxeOnEdit(item) }} />
-          </Col>
-          <Col xs='1' style={{borderLeft: 'black 0.5px solid' }}>
-            <MdDeleteForever className='CarBrand-detele-btn' style={{ width: '25px', height: '25px' }} onClick={handleClickOpenDelete} />
-          </Col>
-        </Row>)}
+        <div style={{ maxHeight: "500px", overflow: "hidden", overflowY: 'visible', paddingRight: '5px' }}>
+          {WageList.map((item, key) => <Row style={{ textAlign: 'center', padding: '8xp 10px', lineHeight: '27px', borderBottom: 'black 0.5px solid' }}>
+            <Col xs='1' style={{ borderLeft: 'black 0.5px solid', paddingRight: '5px' }}>
+              {key + 1}
+            </Col>
+            <Col xs='5' style={{ borderLeft: 'black 0.5px solid' }}>
+              {item.MoTa}
+            </Col><Col xs='4' style={{ borderLeft: 'black 0.5px solid' }}>
+              {item.TienCong.toLocaleString('vi', { style: 'currency', currency: 'VND' })}
+            </Col>
+            <Col xs='1' style={{ borderLeft: 'black 0.5px solid' }}>
+              <BiEdit className='CarBrand-edit-btn' style={{ width: '25px', height: '25px' }} onClick={() => { handleClickOpenEdit(); setTCOnEdit(item); setTenTC(item.MoTa); setGiaTC(item.TienCong) }} />
+            </Col>
+            <Col xs='1' style={{ borderLeft: 'black 0.5px solid' }}>
+              <MdDeleteForever className='CarBrand-detele-btn' style={{ width: '25px', height: '25px' }} onClick={() => { handleClickOpenDelete(); setTCOnEdit(item); }} />
+            </Col>
+          </Row>)}
         </div>
-        <Row style={{display:'flex',justifyContent:'flex-end'}}>
-          <Button onClick={handleClickOpenAdd} style={{marginTop:'15px',width:'30%',textTransform:'none',backgroundColor:'#0c828f',color:'white'}}>
-            Thêm hiệu xe  
-          <MdLibraryAdd style={{marginLeft:'6px',fontSize:'18px'}}/>
+        <Row style={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <Button onClick={()=>{handleClickOpenAdd();setTenTC(''); setGiaTC(0) }} style={{ marginTop: '15px', width: '30%', textTransform: 'none', backgroundColor: '#0c828f', color: 'white' }}>
+            Thêm Tiền Công
+            <MdLibraryAdd style={{ marginLeft: '6px', fontSize: '18px' }} />
           </Button>
         </Row>
       </Container>
-      
+
       <Dialog className='Add'
         open={openAdd}
         onClose={handleCloseAdd}
       >
         <DialogTitle >
-          {"Thêm Hiệu xe"}
+          {"Thêm Tiền Công"}
         </DialogTitle>
         <DialogContent>
           <Form>
             <Form.Group className="mb-3" >
-              <Form.Label>Nhập tên Hiệu xe muốn thêm</Form.Label>
-              <Form.Control as="textarea" placeholder='Ví dụ: Posch' onChange={handleTenHxeChange} />
+              <Form.Label>Nhập nội dung tiền công</Form.Label>
+              <Form.Control type='text' defaultValue={''} onChange={handleTenTCChange} />
+            </Form.Group>
+            <Form.Group className="mb-3" >
+              <Form.Label>Nhập giá tiền công(>10.000đ)</Form.Label>
+              <Form.Control type='number' min={10000} step={40000} defaultValue={0} onChange={handleGiaTCChange} />
             </Form.Group>
           </Form>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseAdd}>Hủy bỏ</Button>
-          <Button onClick={handleCloseAdd} autoFocus>
-            Thêm Hiệu xe
+          <Button onClick={handleCloseAddAndUpdate} autoFocus>
+            Thêm Tiền công
           </Button>
         </DialogActions>
       </Dialog>
@@ -125,13 +188,13 @@ export default function WageList(props) {
         onClose={handleCloseDelete}
       >
         <DialogTitle >
-          {"Bạn có chắc chắn muốn xóa Hiệu xe này?"}
+          {"Bạn có chắc chắn muốn xóa Tiền Công này?"}
         </DialogTitle>
 
         <DialogActions>
           <Button onClick={handleCloseDelete}>Hủy bỏ</Button>
-          <Button onClick={handleCloseDelete} autoFocus>
-            Xóa hiệu xe
+          <Button onClick={handleCloseDeleteAndUpdate} autoFocus>
+            Xóa Tiền Công
           </Button>
         </DialogActions>
       </Dialog>
@@ -140,13 +203,17 @@ export default function WageList(props) {
         onClose={handleCloseEdit}
       >
         <DialogTitle >
-          {"Sửa Hiệu xe"}
+          {"Sửa Tiền Công"}
         </DialogTitle>
         <DialogContent>
           <Form>
             <Form.Group className="mb-3" >
-              <Form.Label>Nhập tên Hiệu xe mới</Form.Label>
-              <Form.Control as="textarea" placeholder={HxeOnEdit.TenHieuXe} onChange={handleTenHxeChange} />
+              <Form.Label>Nhập nội dung tiền công</Form.Label>
+              <Form.Control type='text' defaultValue={TCOnEdit.MoTa} onChange={handleTenTCChange} />
+            </Form.Group>
+            <Form.Group className="mb-3" >
+              <Form.Label>Nhập giá tiền công(>10.000đ) </Form.Label>
+              <Form.Control type='number' min={10000} step={40000} defaultValue={TCOnEdit.TienCong} onChange={handleGiaTCChange} />
             </Form.Group>
           </Form>
         </DialogContent>
@@ -155,6 +222,17 @@ export default function WageList(props) {
           <Button onClick={handleCloseEditAndUpdate} autoFocus>
             Cập nhật
           </Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog className='Cảnh báo'
+        open={openWarn}
+        onClose={handleCloseWarn}
+      >
+        <DialogTitle >
+          {"Vui lòng nhập đúng định dạng"}
+        </DialogTitle>
+        <DialogActions>
+          <Button onClick={handleCloseWarn}>OK</Button>
         </DialogActions>
       </Dialog>
     </div>
