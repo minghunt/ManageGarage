@@ -1,8 +1,8 @@
 ###
-GET http://localhost:8000/api/cars
+GET http://localhost:8000/api/cars-brand
 
 ###
-POST http://localhost:8000/api/cars HTTP/1.1
+POST http://localhost:8000/api/cars-brand HTTP/1.1
 content-type: application/json
 
 {
@@ -10,7 +10,11 @@ content-type: application/json
 }
 
 ###
-PUT http://localhost:8000/api/cars
-sth
+PUT http://localhost:8000/api/cars-brand
+
+{
+    "_id" : "646e30257eb8ed0888a268a5",
+    "TenHieuXe" : "Test"
+}
 ###
-DELETE http://localhost:8000/api/cars/2
+DELETE http://localhost:8000/api/cars-brand/2
