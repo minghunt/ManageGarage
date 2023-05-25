@@ -59,11 +59,12 @@ const Login = () => {
 
             if (response.status === 200) {
                 console.log('Đăng nhập thành công:', response.data.message);
+                console.log(response.data);
+                values.userRoleAdmin = response.data.userRoleAdmin;
                 const expirationDate = new Date();
                 expirationDate.setTime(expirationDate.getTime() + (10 * 60 * 1000)); // 10 phút
                 Cookies.set('token', response.data.token, { expires: expirationDate });
-                dispatch(loginSuccess(values.email));
-                // console.log(values.email);
+                dispatch(loginSuccess(values));
                 setIsLoading(false);
                 navigate("/Rule");
             } else {
@@ -121,6 +122,7 @@ const Login = () => {
                                 initialValues = {{
                                     email: "",
                                     password: "",
+                                    userRoleAdmin: false,
                                 }}
                                 validationSchema={Yup.object().shape({
                                     email: Yup.string()

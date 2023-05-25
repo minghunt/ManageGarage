@@ -22,6 +22,9 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String
   },
+  userRoleAdmin: {
+    type: Boolean
+  },
   otpNumber: {
     type: String
   },
