@@ -55,9 +55,10 @@ const createUser = async (req, res) => {
     const passwordR = req.body.password;
     const nameR = req.body.fullName;
     const phoneNumberR = req.body.phoneNumber;
+    const role = req.body.userRoleAdmin;
     const currentTime = new Date();
     const existingUser = await userModel.findOne({ email: { $eq: emailR } });
-
+  
     if (existingUser) {
       console.log("Người dùng đã tồn tại");
       return res.status(400).json({ error: "Người dùng đã tồn tại" });
@@ -77,6 +78,7 @@ const createUser = async (req, res) => {
       password: hashedPassword,
       name: nameR,
       phoneNumber: phoneNumberR,
+      userRoleAdmin: role,
       date: currentTime,
       refreshToken: refreshToken,
     });
