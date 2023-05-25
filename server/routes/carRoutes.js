@@ -7,6 +7,8 @@ import * as carController from '../controllers/carController.js';
 router.get('/', carController.getAllCars);
 // Get all cars
 router.get('/:id', carController.getCarById);
+// check BienSO
+router.get('/check/:bienSo', carController.checkBienSo);
 
 // Create a new car
 router.post('/', carController.createCar);
