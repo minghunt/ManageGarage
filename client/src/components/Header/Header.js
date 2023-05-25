@@ -1,12 +1,25 @@
 import React from "react";
-import 'bootstrap/dist/css/bootstrap.min.css';
+import { Link, useNavigate } from 'react-router-dom'
+import { useSelector, useDispatch } from 'react-redux';
+import { logoutSuccess } from '../../features/userSlice';
 import Container from 'react-bootstrap/Container'
-import { Link } from 'react-router-dom'
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
-import './Header.css'
 import NavDropdown from 'react-bootstrap/NavDropdown';
+import Cookies from 'js-cookie';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './Header.css'
 const Header = () => {
+  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    dispatch(logoutSuccess());
+    console.log("Đăng xuất thành công!");
+    Cookies.remove('token');
+    navigate('/');
+    }
     return (
         <div style={{backgroundColor:'#f8f9fa'}}>
             <Container >
@@ -33,7 +46,7 @@ const Header = () => {
                                 Trợ giúp
                             </NavDropdown.Item>
                             <NavDropdown.Divider />
-                            <NavDropdown.Item href="">
+                            <NavDropdown.Item onClick={handleLogout}>
                                 Đăng xuất
                             </NavDropdown.Item>
                         </NavDropdown>
