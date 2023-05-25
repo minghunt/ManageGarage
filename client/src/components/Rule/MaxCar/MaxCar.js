@@ -57,7 +57,7 @@ export default function MaxCar() {
   return (
         <div>
             <p style={{color:'black', margin:'-14px 0 10px 0'}}>Số xe sửa tối đa trong ngày là {Para.SoXeSuaChuaToiDa}</p>
-            <Button onClick={handleClickOpenEdit} style={{color:'white',backgroundColor:'#0c828f', textTransform:'none'}}>
+            <Button onClick={()=>{handleClickOpenEdit();setMaxCar(Para.SoXeSuaChuaToiDa)}} style={{color:'white',backgroundColor:'#0c828f', textTransform:'none'}}>
                 Chỉnh sửa
                 <BiEdit style={{fontSize:'18px',marginLeft:'5px'}}/>
             </Button>

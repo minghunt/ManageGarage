@@ -27,13 +27,12 @@ export default function WageList(props) {
   const [tenTC, setTenTC] = React.useState('');
   const [giaTC, setGiaTC] = React.useState(0);
 
+  // Them 
   const handleClickOpenAdd = () => {
     setOpenAdd(true);
   };
   const handleCloseAdd = () => {
     setOpenAdd(false);
-    setGiaTC(0); setTenTC('')
-
   };
   const handleCloseAddAndUpdate = () => {
     if (tenTC !== '' && giaTC > 10000) {
@@ -48,19 +47,14 @@ export default function WageList(props) {
     }
     else {
       setOpenWarn(true);
-
     }
-    //setGiaTC(0); setTenTC('')
-
   };
-
-  const handleClickOpenEdit = (item) => {
+  // Sua
+  const handleClickOpenEdit = () => {
     setOpenEdit(true);
   };
   const handleCloseEdit = () => {
     setOpenEdit(false);
-    setGiaTC(0); setTenTC('')
-
   };
   const handleCloseEditAndUpdate = () => {
     if (tenTC !== '' && giaTC > 10000) {
@@ -75,9 +69,8 @@ export default function WageList(props) {
     else {
       setOpenWarn(true);
     }
-    setGiaTC(0);setTenTC('')
   }
-
+  //Xoa
   const handleClickOpenDelete = () => {
     setOpenDelete(true);
   };
@@ -88,7 +81,6 @@ export default function WageList(props) {
   const handleCloseDeleteAndUpdate = () => {
     TienCongDataService.deleteTienCong(TCOnEdit.MaTienCong)
     setOpenDelete(false);
-
     setTimeout(() => { setReload(!reload); }, 200)
   };
 

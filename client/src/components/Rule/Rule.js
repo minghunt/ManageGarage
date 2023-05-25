@@ -11,6 +11,7 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import MaxCar from './MaxCar/MaxCar';
 import WageList from './WageList/WageList';
+import ApplianceList from './ApplianceList/ApplianceList';
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -83,14 +84,6 @@ const StyledTab = styled((props) => <Tab disableRipple {...props} />)(
 
 export default function Rule() {
   const [value, setValue] = React.useState(0);
-  const [Hxe, setHxe] = React.useState([
-    { _id: '1', TenHieuXe: 'Honda', TienCong: 500000 }, { _id: '2', TenHieuXe: 'Suzuki', TienCong: 500000 }, { _id: '3', TenHieuXe: 'Yamaha', TienCong: 500000 },
-    { _id: '4', TenHieuXe: 'Suzuki', TienCong: 500000 }, { _id: '5', TenHieuXe: 'Yamaha', TienCong: 500000 }, { _id: '1', TenHieuXe: 'Honda', TienCong: 500000 }, { _id: '2', TenHieuXe: 'Suzuki', TienCong: 500000 }, { _id: '3', TenHieuXe: 'Yamaha', TienCong: 500000 },
-    { _id: '4', TenHieuXe: 'Suzuki', TienCong: 500000 }, { _id: '5', TenHieuXe: 'Yamaha', TienCong: 500000 }, { _id: '1', TenHieuXe: 'Honda', TienCong: 500000 }, { _id: '2', TenHieuXe: 'Suzuki', TienCong: 500000 }, { _id: '3', TenHieuXe: 'Yamaha', TienCong: 500000 },
-    { _id: '4', TenHieuXe: 'Suzuki', TienCong: 500000 }, { _id: '5', TenHieuXe: 'Yamaha', TienCong: 500000 }, { _id: '1', TenHieuXe: 'Honda', TienCong: 500000 }, { _id: '2', TenHieuXe: 'Suzuki', TienCong: 500000 }, { _id: '3', TenHieuXe: 'Yamaha', TienCong: 500000 },
-    { _id: '4', TenHieuXe: 'Suzuki', TienCong: 500000 }, { _id: '5', TenHieuXe: 'Yamaha', TienCong: 500000 }, { _id: '1', TenHieuXe: 'Honda', TienCong: 500000 }, { _id: '2', TenHieuXe: 'Suzuki', TienCong: 500000 }, { _id: '3', TenHieuXe: 'Yamaha', TienCong: 500000 },
-    { _id: '4', TenHieuXe: 'Suzuki', TienCong: 500000 }, { _id: '5', TenHieuXe: 'Yamaha', TienCong: 500000 },
-  ])
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -123,10 +116,10 @@ export default function Rule() {
             <MaxCar />
           </TabPanel>
           <TabPanel value={value} index={2}>
-            <WageList Hxe={Hxe} />
+            <WageList/>
           </TabPanel>
           <TabPanel value={value} index={3}>
-            Item Four
+            <ApplianceList/>
           </TabPanel>
         </Box>
       </Container>

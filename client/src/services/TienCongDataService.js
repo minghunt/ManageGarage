@@ -1,7 +1,7 @@
 import axios from "axios";
 import { BASE_URL } from "../config/config";
 
-class CarBrandDataService {
+class TienCongDataService {
     getAllTienCong() {
         return axios.get(`${BASE_URL}/api/tiencong`)
     }
@@ -17,4 +17,4 @@ class CarBrandDataService {
     }
 }
 
-export default new CarBrandDataService();
+export default new TienCongDataService();

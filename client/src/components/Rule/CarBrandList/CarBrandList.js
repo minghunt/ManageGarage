@@ -134,7 +134,7 @@ export default function CarBrandList() {
             {item.TenHieuXe}
           </Col>
           <Col xs='3' style={{borderLeft: 'black 0.5px solid' }}>
-            <BiEdit className='CarBrand-edit-btn' style={{ width: '25px', height: '25px' }} onClick={() => { handleClickOpenEdit(); setHxeOnEdit(item) }} />
+            <BiEdit className='CarBrand-edit-btn' style={{ width: '25px', height: '25px' }} onClick={() => { handleClickOpenEdit(); setHxeOnEdit(item);setTenHxeNew(HxeOnEdit.TenHieuXe) }} />
           </Col>
           <Col xs='3' style={{borderLeft: 'black 0.5px solid' }}>
             <MdDeleteForever className='CarBrand-detele-btn' style={{ width: '25px', height: '25px' }} onClick={()=>{handleClickOpenDelete();setHxeOnEdit(item)}} />

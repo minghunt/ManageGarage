@@ -5,7 +5,8 @@ import { PORT } from "./config/config.js";
 import {
   carBrandsRoutes,
   paraRoutes,
-  tiencongRoutes
+  tiencongRoutes,
+  phutungRoutes,
 } from "./routes/index.js";
 
 const start = async () => {
@@ -20,6 +21,7 @@ const start = async () => {
   app.use("/api/cars-brand", carBrandsRoutes);
   app.use("/api/para", paraRoutes);
   app.use("/api/tiencong", tiencongRoutes);
+  app.use("/api/phutung", phutungRoutes);
 
 
   // Start server
