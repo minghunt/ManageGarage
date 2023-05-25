@@ -11,6 +11,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './Header.css'
 const Header = () => {
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+  const isUserRoleAdmin = useSelector((state) => state.user.isUserRoleAdmin);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -24,7 +26,7 @@ const Header = () => {
         <div style={{backgroundColor:'#f8f9fa'}}>
             <Container >
             <Navbar bg="light" expand="sm">
-                <Navbar.Brand href="/Task">Quản Lý Garage Ô tô</Navbar.Brand>
+                <Navbar.Brand href="/Task">Quản Lý Garage Ô tô{isUserRoleAdmin}</Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="me-auto">
@@ -33,11 +35,14 @@ const Header = () => {
                         </Nav.Link>
                         <Nav.Link>
                             <Link className="header-nav-link" to={"/Report"}>Báo cáo</Link>
-
                         </Nav.Link>
+                        {isUserRoleAdmin ? (
                         <Nav.Link>
                             <Link  className="header-nav-link" to={"/Rule"}>Quy định</Link>
                         </Nav.Link>
+                        ) : (
+                        <></>
+                        )}
                     </Nav>
                     <Nav>
                         <NavDropdown title="Tài khoản" id="collasible-nav-dropdown">
