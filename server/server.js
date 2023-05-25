@@ -9,6 +9,7 @@ import {
   phutungRoutes,
   loginRoutes,
   usersRoutes,
+  carRoutes
 } from "./routes/index.js";
 
 const start = async () => {
@@ -26,6 +27,8 @@ const start = async () => {
   app.use("/api/phutung", phutungRoutes);
   app.use("/api/users", usersRoutes);
   app.use("/api", loginRoutes);
+  app.use("/api/car", carRoutes);
+
 
   // Start server
   app.listen(PORT, () => {
