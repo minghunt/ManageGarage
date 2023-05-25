@@ -7,6 +7,7 @@ import {
   paraRoutes,
   tiencongRoutes,
   phutungRoutes,
+  carRoutes
 } from "./routes/index.js";
 
 const start = async () => {
@@ -22,6 +23,7 @@ const start = async () => {
   app.use("/api/para", paraRoutes);
   app.use("/api/tiencong", tiencongRoutes);
   app.use("/api/phutung", phutungRoutes);
+  app.use("/api/car", carRoutes);
 
 
   // Start server
