@@ -4,31 +4,38 @@ import carModel from '../models/carModel.js';
 // Create a new car
 const createCar = async (carData) => {
   try {
-    const isCarExist = await carModel.findOne({ BienSo: carData.BienSo }).exec();
-    if(isCarExist)
-    {
-        return isCarExist._id;
-    }
-    else{
         const newCar = new carModel(carData);
         const savedCar = await newCar.save();
         return savedCar;
-    }
-  } catch (error) {
+  } 
+  catch (error) {
     throw error;
   }
 };
 
 // Get all cars
-const getAllCars = async () => {
+const getAllCars = async ({filters = null}={}) => {
+
+  let query;
+  if(filters) {
+    if('MaHieuXe' in filters) {
+      query = { "MaHieuXe": { $eq: filters["MaHieuXe"]} }
+    }else if("TenKH" in filters) {
+      query = { $text: { $search: filters['TenKH'] } };
+    }else if("TienNo" in filters) {
+      query = { "TienNo": { $lte: filters['TienNo'] } }
+    }
+  }
+
   try {
-    const cars = await carModel.find();
-    console.log("DAO. cars: ", cars);
-    return cars;
+    const carList = await carModel.find(query);
+    return carList;
   } catch (error) {
     throw error;
   }
 };
+
+
 // Get a car by ID
 const getCarById = async (carId) => {
   try {
@@ -47,11 +54,21 @@ const updateCar = async (carData) => {
     throw error;
   }
 };
-
+// Check for BienSo is exist
+const checkBienSo = async (BienSo) =>{
+    try{
+        const isBienSo = await carModel.findOne({ BienSo: BienSo }).exec();
+        return isBienSo;
+    }catch(error){
+        console.log(1);
+        throw error;
+    }
+};
 export {
   createCar,
   getAllCars,
   getCarById,
   updateCar,
+  checkBienSo
 };
 

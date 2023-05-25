@@ -5,27 +5,28 @@ async function createCar(req, res) {
   try {
     const newCar = req.body;
     const createdCar = await carDAO.createCar(newCar);
-    if(createdCar)
-    {
-        res.status(201).json(createdCar);
-    }
-    else{
-        const car = await carDAO.updateCar(newCar);
-        if (car) {
-            res.status(200).json({message: "Cập nhật thành công"});
-          } else {
-            res.status(404).json({ error: 'Car not found' });
-          }
-    }
-  } catch (error) {
+    res.status(201).json(createdCar);
+  } 
+  catch (error) {
     res.status(500).json({ error: error.message });
   }
 }
 
 // Get all cars
 async function getAllCars(req, res) {
+
+  let filters ={};
+  if(req.query.MaHieuXe){
+    filters.MaHieuXe = req.query.MaHieuXe;
+  }
+  else if (req.query.TenKH){
+    filters.TenKH = req.query.TenKH;
+  }
+  else if(req.query.TienNo){
+    filters.TienNo = req.query.TienNo;
+  }
   try {
-    const cars = await carDAO.getAllCars();
+    const cars = await carDAO.getAllCars({filters});
     console.log("Controller. Cars: ", cars);
     res.status(200).json(cars);
   } catch (error) {
@@ -63,12 +64,29 @@ async function updateCar(req, res) {
     res.status(500).json({ error: error.message });
   }
 }
-
+//  Check for BienSo is exist
+ 
+async function checkBienSo(req, res) {
+    try{
+        const checkCar = req.params.bienSo;
+        const car = await carDAO.checkBienSo(checkCar)
+        if (car)
+        {
+            res.status(200).json(car._id);
+        }else {
+            res.status(200).json({message: "Xe mới" });
+        }
+    }
+    catch (error) {
+    res.status(500).json({ error: error.message });
+    }
+}
 
 export {
     createCar,
     getAllCars,
     getCarById,
     updateCar,
+    checkBienSo,
 };
 
