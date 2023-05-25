@@ -1,17 +1,32 @@
 import React from "react";
-import 'bootstrap/dist/css/bootstrap.min.css';
+import { Link, useNavigate } from 'react-router-dom'
+import { useSelector, useDispatch } from 'react-redux';
+import { logoutSuccess } from '../../features/userSlice';
 import Container from 'react-bootstrap/Container'
-import { Link } from 'react-router-dom'
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
-import './Header.css'
 import NavDropdown from 'react-bootstrap/NavDropdown';
+import Cookies from 'js-cookie';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './Header.css'
 const Header = () => {
+  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+  const isUserRoleAdmin = useSelector((state) => state.user.isUserRoleAdmin);
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    dispatch(logoutSuccess());
+    console.log("Đăng xuất thành công!");
+    Cookies.remove('token');
+    navigate('/');
+    }
     return (
         <div style={{backgroundColor:'#f8f9fa'}}>
             <Container >
             <Navbar bg="light" expand="sm">
-                <Navbar.Brand href="/Task">Quản Lý Garage Ô tô</Navbar.Brand>
+                <Navbar.Brand href="/Task">Quản Lý Garage Ô tô{isUserRoleAdmin}</Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="me-auto">
@@ -20,11 +35,14 @@ const Header = () => {
                         </Nav.Link>
                         <Nav.Link>
                             <Link className="header-nav-link" to={"/Report"}>Báo cáo</Link>
-
                         </Nav.Link>
+                        {isUserRoleAdmin ? (
                         <Nav.Link>
                             <Link  className="header-nav-link" to={"/Rule"}>Quy định</Link>
                         </Nav.Link>
+                        ) : (
+                        <></>
+                        )}
                     </Nav>
                     <Nav>
                         <NavDropdown title="Tài khoản" id="collasible-nav-dropdown">
@@ -33,7 +51,7 @@ const Header = () => {
                                 Trợ giúp
                             </NavDropdown.Item>
                             <NavDropdown.Divider />
-                            <NavDropdown.Item href="">
+                            <NavDropdown.Item onClick={handleLogout}>
                                 Đăng xuất
                             </NavDropdown.Item>
                         </NavDropdown>

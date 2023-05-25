@@ -1,6 +1,6 @@
+# API cars-brand
 ###
 GET http://localhost:8000/api/cars-brand
-
 ###
 POST http://localhost:8000/api/cars-brand HTTP/1.1
 content-type: application/json
@@ -8,7 +8,6 @@ content-type: application/json
 {
 	"TenHieuXe" : "hihi"
 }
-
 ###
 PUT http://localhost:8000/api/cars-brand
 
@@ -16,6 +15,29 @@ PUT http://localhost:8000/api/cars-brand
     "_id" : "646e30257eb8ed0888a268a5",
     "TenHieuXe" : "Test"
 }
-
 ###
 DELETE http://localhost:8000/api/cars-brand/2
+
+
+# API users
+###
+GET http://localhost:8000/api/users
+###
+POST http://localhost:8000/api/users HTTP/1.1
+content-type: application/json
+
+{
+	"email" : "minhhau.uit@gmail.com",
+    "password" : "hihi"
+}
+
+
+# API login
+###
+POST http://localhost:8000/api/login HTTP/1.1
+content-type: application/json
+
+{
+	"email" : "minhhau.uit@gmail.com",
+    "password" : "hihi"
+}
