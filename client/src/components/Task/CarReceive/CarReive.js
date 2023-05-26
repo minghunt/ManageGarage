@@ -54,17 +54,6 @@ const CarReceive = () => {
         if (form.checkValidity() === false) {
             event.preventDefault();
             event.stopPropagation();
-            let _Car={
-                BienSo:BienSo,
-                TenKH:TenKH,
-                MaHieuXe:MaHieuXe,
-                DiaChi:DiaChi,
-                DienThoai:DienThoai,
-                NgayNhan:NgayNhan
-            }
-
-            console.log(_Car)
-
         }
         else {
             let _Car={
