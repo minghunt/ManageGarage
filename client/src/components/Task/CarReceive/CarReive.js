@@ -20,7 +20,7 @@ const CarReceive = () => {
 
     const [BienSo,setBienSo]=useState([])
     const [TenKH,setTenKH]=useState('')
-    const [MaHieuXe,setMaHieuXe]=useState(0)
+    const [MaHieuXe,setMaHieuXe]=useState(1)
     const [NgayNhan,setNgayNhan]=useState(Date)
 
     const [DienThoai,setDienThoai]=useState([])
@@ -165,7 +165,7 @@ const CarReceive = () => {
                             <Button style={{backgroundColor:'#0c828f' ,border:'none'}} type="submit">Lập phiếu tiếp nhận</Button>
                         </Form>
                     </Col>
-                    <Col xs='8'>
+                    <Col xs='8' className='CarBrandList-container' style={{marginTop:'-10px'}}>
                         <h2>
                             Danh sách xe tiếp nhận
                         </h2>
