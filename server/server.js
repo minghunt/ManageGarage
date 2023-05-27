@@ -10,6 +10,7 @@ import {
   loginRoutes,
   usersRoutes,
   carRoutes,
+  phieusuachuaRoutes,
   phieuthuRoutes,
   phieunhapRoutes
 
@@ -32,6 +33,8 @@ const start = async () => {
   app.use("/api", loginRoutes);
   app.use("/api/car", carRoutes);
   app.use("/api/phieunhap", phieunhapRoutes);
+  app.use("/api/phieusuachua", phieusuachuaRoutes);
+  app.use("/api/phieuthu", phieuthuRoutes);
 
 
   // Start server

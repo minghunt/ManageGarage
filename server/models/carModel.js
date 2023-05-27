@@ -25,6 +25,7 @@ const carSchema = new mongoose.Schema({
   },
   MaHieuXe: {
     type: Number,
+    ref:'hieuxes'
   },
   NgayNhan: {
     type: Date,
