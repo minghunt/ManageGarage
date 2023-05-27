@@ -43,7 +43,7 @@ export default function ApplianceList() {
       PhuTungDataService.createPhuTung(Appli)
       console.log(Appli)
       setOpenAdd(false);
-      setTimeout(() => { setReload(!reload); }, 500)
+      setTimeout(() => { setReload(!reload); }, 600)
     }
     else {
       setOpenWarn(true);
@@ -64,7 +64,7 @@ export default function ApplianceList() {
       setOpenEdit(_AppliOnEdit)
       PhuTungDataService.updatePhuTung(_AppliOnEdit)
       setOpenEdit(false);
-      setTimeout(() => { setReload(!reload); }, 200)
+      setTimeout(() => { setReload(!reload); }, 400)
     }
     else {
       setOpenWarn(true);

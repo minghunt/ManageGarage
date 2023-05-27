@@ -11,14 +11,13 @@ import PhuTungDataService from '../../../services/PhuTungDataService'
 const ApplianceReceive = () => {
     const [reload, setReload] = useState(false)
     const [AppliList, setAppliList] = useState([])
-    const [parts, setParts] = useState([{ name: null, quantity: null, price: 610000, total: 0 }])
-    const [listPhuTung, setListPhuTung] = useState([])
+    const [parts, setParts] = useState([{ name: 'Bánh xe', quantity: null, price: 610000, total: 0 }])
     const [totalPrice, setTotalPrice] = useState(0)
     const [NgayNhan, setNgayNhan] = useState(Date)
     const [validated, setValidated] = useState(false);
     const handleClickOpenAdd = (e) => {
         let _parts = parts;
-        _parts.push({ name: null, quantity: null, price: AppliList[0].DonGia, total: 0 })
+        _parts.push({ name: AppliList[0].TenPhuTung, quantity: null, price: AppliList[0].DonGia, total: 0 })
         setParts(_parts)
         setReload(!reload)
     }
@@ -29,8 +28,8 @@ const ApplianceReceive = () => {
     }
     const handleNameChange = (index, event) => {
         let _parts = parts;
-        _parts[index].name = listPhuTung[event.target.value].TenPhuTung;
-        _parts[index].price = listPhuTung[event.target.value].DonGia;
+        _parts[index].name = AppliList[event.target.value].TenPhuTung;
+        _parts[index].price = AppliList[event.target.value].DonGia;
         _parts[index].total = _parts[index].quantity * _parts[index].price;
         setParts(_parts)
         setReload(!reload)
@@ -51,6 +50,7 @@ const ApplianceReceive = () => {
     }
     const handleRemovePart = (index, event) => {
         let _part = parts;
+        if (_part.length===1) return;
         console.log('index', index)
         _part.splice(index, 1)
         setParts(_part)
@@ -66,15 +66,13 @@ const ApplianceReceive = () => {
 
         }
         setValidated(true);
+        console.log('PhieuNhap',parts)
     };
     useEffect(() => {
         let s = 0;
         parts.map(item => s += item.total)
         setTotalPrice(s)
-        PhuTungDataService.getAllPhuTung()
-            .then((data) => {
-                setListPhuTung(data.data)
-            })
+        
         PhuTungDataService.getAllPhuTung()
             .then((data) => {
                 setAppliList(data.data)
@@ -139,7 +137,7 @@ const ApplianceReceive = () => {
                                                     onChange={(event) => handleNameChange(index, event)}
                                                     required
                                                 >
-                                                    {listPhuTung.map((phuTung, key) =>
+                                                    {AppliList.map((phuTung, key) =>
                                                         part.name === phuTung.TenPhuTung ?
                                                             <option value={key} selected>
                                                                 {phuTung.TenPhuTung}

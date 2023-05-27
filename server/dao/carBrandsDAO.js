@@ -15,7 +15,6 @@ const createCarBrand = async (carBrandData) => {
 const getAllCarBrands = async () => {
   try {
     const carBrands = await carBrandModel.find();
-    console.log("DAO. carBrands: ", carBrands);
     return carBrands;
   } catch (error) {
     throw error;

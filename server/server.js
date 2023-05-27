@@ -10,7 +10,9 @@ import {
   loginRoutes,
   usersRoutes,
   carRoutes,
-  phieusuachuaRoutes
+  phieusuachuaRoutes,
+  phieuthuRoutes,
+
 } from "./routes/index.js";
 
 const start = async () => {
@@ -30,6 +32,7 @@ const start = async () => {
   app.use("/api", loginRoutes);
   app.use("/api/car", carRoutes);
   app.use("/api/phieusuachua", phieusuachuaRoutes);
+  app.use("/api/phieuthu", phieuthuRoutes);
 
 
   // Start server

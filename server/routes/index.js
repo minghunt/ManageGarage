@@ -6,5 +6,7 @@ export { default as loginRoutes } from './loginRoutes.js';
 export { default as usersRoutes } from './usersRoutes.js';
 export { default as carRoutes } from './carRoutes.js';
 export { default as phieusuachuaRoutes } from './phieusuachuaRoutes.js';
+export { default as phieuthuRoutes } from './phieuthuRoutes.js';
+
 
 

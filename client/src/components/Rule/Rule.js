@@ -86,8 +86,15 @@ export default function Rule() {
   const [value, setValue] = React.useState(0);
   const handleChange = (event, newValue) => {
     setValue(newValue);
+    localStorage.setItem('selectedRuleTab',newValue)
   };
-
+  React.useEffect(()=>{
+    const storedValue = localStorage.getItem('selectedRuleTab');
+    if (storedValue) {
+      setValue(parseInt(storedValue));
+      console.log(storedValue)
+    }
+  },[])
   return (
     <div>
       <Header />
