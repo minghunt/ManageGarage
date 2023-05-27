@@ -2,7 +2,7 @@ import phieuthuModel from '../models/phieuthuModel.js';
 import carModel from '../models/carModel.js';
 
 // Create a new PhieuThu
-//TienNo
+//TienNo chua xu ly
 const createPhieuThu = async (phieuthuData) => {
   try {
     const newPhieuThu = new phieuthuModel(phieuthuData);

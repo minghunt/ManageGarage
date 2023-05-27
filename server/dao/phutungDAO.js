@@ -15,7 +15,7 @@ const createPhuTung = async (phutungData) => {
 const getAllPhuTung = async () => {
   try {
     const PhuTungs = await phutungModel.find();
-    console.log("DAO. phutung: ", PhuTungs);
+   
     return PhuTungs;
   } catch (error) {
     throw error;

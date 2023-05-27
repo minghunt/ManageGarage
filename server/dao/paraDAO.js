@@ -5,7 +5,7 @@ import paraModel from '../models/paraModel.js';
 const getPara = async () => {
   try {
     const paras = await paraModel.find();
-    console.log("DAO. para: ", paras);
+   
     return paras;
   } catch (error) {
     throw error;

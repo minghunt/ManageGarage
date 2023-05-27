@@ -4,7 +4,7 @@ import * as paraDAO from '../dao/paraDAO.js';
 async function getPara(req,res) {
   try {
     const paras = await paraDAO.getPara();
-    console.log("Controller. Paras: ", paras);
+    
     res.status(200).json(paras);
   } catch (error) {
     res.status(500).json({ error: error.message });

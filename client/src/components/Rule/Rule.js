@@ -12,6 +12,8 @@ import Col from 'react-bootstrap/Col'
 import MaxCar from './MaxCar/MaxCar';
 import WageList from './WageList/WageList';
 import ApplianceList from './ApplianceList/ApplianceList';
+import RuleOther from './RuleOther/RuleOther';
+
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -86,15 +88,15 @@ export default function Rule() {
   const [value, setValue] = React.useState(0);
   const handleChange = (event, newValue) => {
     setValue(newValue);
-    localStorage.setItem('selectedRuleTab',newValue)
+    localStorage.setItem('selectedRuleTab', newValue)
   };
-  React.useEffect(()=>{
+  React.useEffect(() => {
     const storedValue = localStorage.getItem('selectedRuleTab');
     if (storedValue) {
       setValue(parseInt(storedValue));
       console.log(storedValue)
     }
-  },[])
+  }, [])
   return (
     <div>
       <Header />
@@ -115,6 +117,7 @@ export default function Rule() {
             <StyledTab label="Số lượng xe sửa tối đa trong ngày" {...a11yProps(1)} />
             <StyledTab label="Danh sách tiền công" {...a11yProps(2)} />
             <StyledTab label="Danh sách vật tư, phụ tùng" {...a11yProps(3)} />
+            <StyledTab label="Đơn giá bán và Kiểm tra tiền thu" {...a11yProps(4)} />
           </StyledTabs>
           <TabPanel value={value} index={0}>
             <CarBrandList />
@@ -123,10 +126,14 @@ export default function Rule() {
             <MaxCar />
           </TabPanel>
           <TabPanel value={value} index={2}>
-            <WageList/>
+            <WageList />
           </TabPanel>
           <TabPanel value={value} index={3}>
-            <ApplianceList/>
+            <ApplianceList />
+          </TabPanel>
+          <TabPanel value={value} index={4}>
+            <RuleOther />
+
           </TabPanel>
         </Box>
       </Container>
