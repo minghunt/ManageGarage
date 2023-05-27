@@ -10,7 +10,8 @@ import {
   loginRoutes,
   usersRoutes,
   carRoutes,
-  phieuthuRoutes
+  phieusuachuaRoutes,
+  phieuthuRoutes,
 
 } from "./routes/index.js";
 
@@ -30,6 +31,7 @@ const start = async () => {
   app.use("/api/users", usersRoutes);
   app.use("/api", loginRoutes);
   app.use("/api/car", carRoutes);
+  app.use("/api/phieusuachua", phieusuachuaRoutes);
   app.use("/api/phieuthu", phieuthuRoutes);
 
 
