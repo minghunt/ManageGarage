@@ -16,13 +16,22 @@ async function createCar(req, res) {
 async function getAllCars(req, res) {
 
   let filters ={};
+  if(req.query.BienSo){
+    filters.BienSo = req.query.BienSo;
+  }
   if(req.query.MaHieuXe){
     filters.MaHieuXe = req.query.MaHieuXe;
   }
-  else if (req.query.TenKH){
+  if(req.query.NgayNhan){
+    filters.NgayNhan = req.query.NgayNhan;
+  }
+  if (req.query.TenKH){
     filters.TenKH = req.query.TenKH;
   }
-  else if(req.query.TienNo){
+  if(req.query.DienThoai){
+    filters.DienThoai = req.query.DienThoai;
+  }
+  if(req.query.TienNo){
     filters.TienNo = req.query.TienNo;
   }
   try {

@@ -41,3 +41,8 @@ content-type: application/json
 	"email" : "minhhau.uit@gmail.com",
     "password" : "hihi"
 }
+
+
+# API login
+###
+GET http://localhost:8000/api/car?MaHieuXe=1&TienNo=10
