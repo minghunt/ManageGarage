@@ -30,7 +30,7 @@ const createPhieuNhap = async (PhieuNhapData) => {
     let phutunglist=await phutungModel.find()
     PhieuNhapData.listParts.map((item)=>{
       let _phutung=phutunglist.filter(i=>i.MaPhuTung===item.MaPhuTung)
-      
+      //_phutung.DonGia=item.
       console.log(_phutung)
       // const newctPhieuNhap = new ct_phieunhapModel(_ctnhappt);
       // newctPhieuNhap.save();

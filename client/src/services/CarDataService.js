@@ -2,8 +2,11 @@ import axios from "axios";
 import { BASE_URL } from "../config/config";
 
 class CarDataService {
-    getAllCar(BienSo=null,DienThoai=null,NgayNhan=null) {
-        return axios.get(`${BASE_URL}/api/car?BienSo=${BienSo}&DienThoai=${DienThoai}&NgayNhan=${NgayNhan}`)
+    getAllCar() {
+        return axios.get(`${BASE_URL}/api/car`)
+    }
+    getAllCarFilter(BienSo,TenKH,DienThoai,MaHieuXe,NgayNhan) {
+        return axios.get(`${BASE_URL}/api/car?BienSo=${BienSo}&TenKH=${TenKH}&DienThoai=${DienThoai}&MaHieuXe=${MaHieuXe}&NgayNhan=${NgayNhan}`)
     }
     createCar(data){
         return axios.post(`${BASE_URL}/api/car`, data)
