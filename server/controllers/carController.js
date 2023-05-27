@@ -27,7 +27,6 @@ async function getAllCars(req, res) {
   }
   try {
     const cars = await carDAO.getAllCars({filters});
-    console.log("Controller. Cars: ", cars);
     res.status(200).json(cars);
   } catch (error) {
     res.status(500).json({ error: error.message });

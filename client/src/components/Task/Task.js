@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Header from '../Header/Header'
 import Box from '@mui/material/Box';
 import Tabs from '@mui/material/Tabs';
@@ -11,7 +11,7 @@ import Container from "react-bootstrap/esm/Container";
 import CarReceive from "./CarReceive/CarReive";
 import ApplianceReive from "./ApplianceReceive/ApplianceReive";
 import CarRepair from "./CarRepair/CarRepair";
-import CarCheckout from "./CarCheckout/CarSearch";
+import CarCheckout from "./CarCheckout/CarCheckout";
 import CarSearch from "./CarSearch/CarSearch";
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -84,11 +84,18 @@ function TabPanel(props) {
 
 const Task=()=>{
     const [value, setValue] = React.useState(0);
-
-  const handleChange = (event, newValue) => {
+    const handleChange = (event, newValue) => {
     setValue(newValue);
-  };
+    localStorage.setItem('selectedTab',newValue)
 
+  };
+  useEffect(()=>{
+    const storedValue = localStorage.getItem('selectedTab');
+    if (storedValue) {
+      setValue(parseInt(storedValue));
+      console.log(storedValue)
+    }
+  },[])
   return (
     <div>
         <Header/>

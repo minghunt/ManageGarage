@@ -25,7 +25,6 @@ async function getAllCarBrands(req, res) {
   try {
     const carBrands = await carBrandsDAO.getAllCarBrands();
     // const cars = await carModel.find();
-    console.log("Controller. CarBrands: ", carBrands);
     res.status(200).json(carBrands);
   } catch (error) {
     res.status(500).json({ error: error.message });
