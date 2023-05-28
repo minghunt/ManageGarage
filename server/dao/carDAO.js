@@ -38,10 +38,9 @@ const getAllCars = async ({filters = null}={}) => {
     if(filters.NgayNhan) {
       const NgayTN = new Date(filters.NgayNhan);
       let tomorrow = new Date(NgayTN)
-      
       query.NgayNhan = {
-        $gte: new Date(NgayTN), 
-        $lt: new Date(tomorrow.setDate(NgayTN.getDate()+1))
+        $gte: new Date(tomorrow.setDate(NgayTN.getDate()-1)), 
+        $lt: new Date(NgayTN)
       }
     }
     if(filters.DienThoai) {
