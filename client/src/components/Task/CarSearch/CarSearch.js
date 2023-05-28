@@ -163,7 +163,7 @@ const CarSearch = () => {
                                 <Col xs='1' style={{ borderLeft: 'black 0.5px solid' }}>
                                     {item.BienSo}
                                 </Col><Col xs='2' style={{ borderLeft: 'black 0.5px solid' }}>
-                                    {item.HieuXe}
+                                    {item.HieuXe.TenHieuXe}
                                 </Col>
                                 <Col xs='2' style={{ borderLeft: 'black 0.5px solid' }}>
                                     {item.TenKH}
