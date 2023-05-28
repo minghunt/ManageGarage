@@ -32,8 +32,7 @@ const getAllCars = async ({filters = null}={}) => {
       query.BienSo = filters.BienSo
     }
     if(filters.MaHieuXe) {
-      query.MaHieuXe= filters.MaHieuXe
-      console.log(query.MaHieuXe)
+      query.MaHieuXe= Number(filters.MaHieuXe)
     }
     if(filters.NgayNhan) {
       const NgayTN = new Date(filters.NgayNhan);
