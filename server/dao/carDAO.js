@@ -4,9 +4,16 @@ import carModel from '../models/carModel.js';
 // Create a new car
 const createCar = async (carData) => {
   try {
-        const newCar = new carModel(carData);
-        const savedCar = await newCar.save();
-        return savedCar;
+        const isCarExist =  await carModel.findOne({ BienSo: carData.BienSo }).exec();
+        if (isCarExist) {
+          const updatedCar = await carModel.findOneAndUpdate({_id:isCarExist._id},carData);
+          return updatedCar;
+        }
+        else{
+          const newCar = new carModel(carData);
+          const savedCar = await newCar.save();
+          return savedCar;
+        }
   } 
   catch (error) {
     throw error;
@@ -26,6 +33,7 @@ const getAllCars = async ({filters = null}={}) => {
     }
     if(filters.MaHieuXe) {
       query.MaHieuXe= filters.MaHieuXe
+      console.log(query.MaHieuXe)
     }
     if(filters.NgayNhan) {
       const NgayTN = new Date(filters.NgayNhan);
@@ -44,8 +52,46 @@ const getAllCars = async ({filters = null}={}) => {
   
   }
   try {
-    const carList = await carModel.find(query);
-    return carList;
+    const carList = await carModel.aggregate([
+      {
+        $match: query
+      },
+      {
+        $lookup: {
+          from: 'hieuxes',
+          localField: 'MaHieuXe',
+          foreignField: 'MaHieuXe',
+          as: 'HieuXe'
+        }
+      },
+      {
+        $unwind: '$HieuXe'
+      },
+      {
+        $project: {
+          _id:1,
+          MaXe:1,
+          TenKH:1,
+          DiaChi:1,
+          DienThoai:1,
+          BienSo:1,
+          Email:1,
+          NgayNhan:1,
+          TienNo:1,
+          MaHieuXe:1,
+          'HieuXe.TenHieuXe':1
+        }
+      }
+    ]);
+    const sortedList = carList.sort((a, b) => {
+      const dateA = new Date(a.NgayNhan);
+      const dateB = new Date(b.NgayNhan);
+      return dateB - dateA;
+    });
+    
+    return sortedList;
+    
+    // return carList;
   } catch (error) {
     throw error;
   }
