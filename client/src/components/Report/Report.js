@@ -68,6 +68,7 @@ const StyledTab = styled((props) => <Tab disableRipple {...props} />)(
         fontWeight: '500',
         '&.Mui-selected': {
             color: '#0c828f',
+            fontWeight:'600'
         },
         '&.Mui-focusVisible': {
             backgroundColor: '#30c1d1',
@@ -96,7 +97,7 @@ const Report = () => {
                 <Box sx={{ width: '100%' }}>
                     <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                         <StyledTabs value={value} onChange={handleChange} aria-label="basic tabs example">
-                            <StyledTab label="Báo cáo doanh số" {...a11yProps(0)} />
+                            <StyledTab label="Báo cáo doanh thu" {...a11yProps(0)} />
                             <StyledTab label="Báo cáo tồn" {...a11yProps(1)} />
                         </StyledTabs>
                     </Box>

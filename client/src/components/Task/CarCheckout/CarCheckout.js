@@ -109,7 +109,6 @@ const CarCheckout = () => {
                             Lập phiếu thu tiền
                         </h2>
 
-
                         <Form noValidate validated={validated} onSubmit={handleSubmit}>
                             <Row >
                                 <Form.Group as={Col} xs='2' controlId="validationCustom01">
@@ -193,7 +192,6 @@ const CarCheckout = () => {
 
                                 <Col xs='2' style={{ borderLeft: 'black 0.5px solid' }}>
                                     {formatDateToVN(item.NgayNhan)}
-
                                 </Col>
                             </Row>)}
                             
