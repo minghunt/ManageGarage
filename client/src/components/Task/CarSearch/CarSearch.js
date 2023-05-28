@@ -61,6 +61,10 @@ const CarSearch = () => {
                 setCarList(data.data)
             })
     };
+    const handleRefresh = () => {
+        window.location.reload()
+    };
+    
     useEffect(() => {
         CarsBrandDataService.getAllCarBrands()
             .then((data) => {
@@ -121,9 +125,10 @@ const CarSearch = () => {
 
                         </Form>
                         <Button onClick={handleSubmitg} style={{ backgroundColor: '#0c828f', border: 'none',marginBottom:'10px' }} type="submit">Tìm kiếm</Button>
+                        <Button onClick={handleRefresh} style={{ backgroundColor: '#0c828f', border: 'none',marginBottom:'10px',marginLeft:'20px' }} type="submit">Làm mới</Button>
 
                     </Col>
-                    <Col xs='12' className='CarBrandList-container' style={{margin:'0px ',}} >
+                    {CarList.length!==0?<Col xs='12' className='CarBrandList-container' style={{margin:'0px ',}} >
                         <h2>
                             Danh sách xe
                         </h2>
@@ -169,14 +174,12 @@ const CarSearch = () => {
                                 <Col xs='2' style={{ borderLeft: 'black 0.5px solid' }}>
                                     {item.TienNo.toLocaleString('vi', { style: 'currency', currency: 'VND' })}
                                 </Col>
-
                                 <Col xs='2' style={{ borderLeft: 'black 0.5px solid' }}>
                                     {formatDateToVN(item.NgayNhan)}
-
                                 </Col>
                             </Row>)}
                         </div>
-                    </Col>
+                    </Col>:<Col xs='12'><h2>Không tìm thấy xe phù hợp</h2></Col>}
                 </Row>
             </Container>
         </div>

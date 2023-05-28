@@ -3,7 +3,8 @@ import mongoose from 'mongoose';
 const CT_phieunhapSchema = new mongoose.Schema({
   MaCTNhapPhuTung: {
     type: Number,
-    
+    unique: true,
+
   },
   MaPhuTung: {
     type: Number,

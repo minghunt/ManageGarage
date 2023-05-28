@@ -8,6 +8,12 @@ class CarDataService {
     getAllCarFilter(BienSo,TenKH,DienThoai,MaHieuXe,NgayNhan) {
         return axios.get(`${BASE_URL}/api/car?BienSo=${BienSo}&TenKH=${TenKH}&DienThoai=${DienThoai}&MaHieuXe=${MaHieuXe}&NgayNhan=${NgayNhan}`)
     }
+    getCarByBienSo(BienSo) {
+        return axios.get(`${BASE_URL}/api/car?BienSo=${BienSo}`)
+    }
+    getCarByNgayNhan(NgayNhan) {
+        return axios.get(`${BASE_URL}/api/car?NgayNhan=${NgayNhan}`)
+    }
     createCar(data){
         return axios.post(`${BASE_URL}/api/car`, data)
     }

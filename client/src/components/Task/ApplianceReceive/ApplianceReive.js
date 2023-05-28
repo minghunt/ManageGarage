@@ -22,7 +22,7 @@ const ApplianceReceive = () => {
     const [totalPrice, setTotalPrice] = useState(0)
     const [NgayNhan, setNgayNhan] = useState(Date)
     const [validated, setValidated] = useState(false);
-    const [Para, setPara] = useState({});
+    const [openSuccess, setOpenSuccess] = useState(false);
     
     const handleCloseEdit = (e) => {
         setOpenEdit(false)
@@ -107,6 +107,12 @@ const ApplianceReceive = () => {
             }
             console.log('PhieuNhap', PhieuNhap)
             PhieuNhapDataService.createPhieuNhap(PhieuNhap)
+            event.preventDefault();
+            event.stopPropagation();
+            setOpenSuccess(true)
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
         }
         setValidated(true);
     };
@@ -121,8 +127,7 @@ const ApplianceReceive = () => {
                 let _AppliList = AppliList;
                 //_AppliList.splice
             })
-        ParaDataService.getPara()
-            .then((data)=>{setPara(data.data)})
+        
     }, [reload])
     return (
         <div>
@@ -290,6 +295,15 @@ const ApplianceReceive = () => {
                 </DialogTitle>
                 <DialogActions>
                     <Button   style={{ backgroundColor: '#0c828f', border: 'none' }} onClick={handleCloseEdit}>OK</Button>
+                </DialogActions>
+            </Dialog>
+            <Dialog className='Success'
+                open={openSuccess}
+            >
+                <DialogTitle >
+                    {"Nhập vật tư thành công! Vui lòng chờ xử lý."}
+                </DialogTitle>
+                <DialogActions>
                 </DialogActions>
             </Dialog>
         </div>

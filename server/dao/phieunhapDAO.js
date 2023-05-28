@@ -1,6 +1,7 @@
 import phieunhapModel from '../models/phieunhapModel.js';
 import ct_phieunhapModel from '../models/CT_phieunhapModel.js';
 import phutungModel from '../models/phutungModel.js'
+import paraModel from '../models/paraModel.js'
 // Create a new PhieuNhap
 
 const createPhieuNhap = async (PhieuNhapData) => {
@@ -13,7 +14,7 @@ const createPhieuNhap = async (PhieuNhapData) => {
     const newPhieuNhap = new phieunhapModel(_phieunhap);
     const savedPhieuNhap = await newPhieuNhap.save();
     //them ct_phieunhap
-    PhieuNhapData.listParts.map(async (item)=>{
+    PhieuNhapData.listParts.map((item,index)=>{
       let _ctnhappt={
         MaNhapPhuTung:savedPhieuNhap.MaNhapPhuTung,
         MaPhuTung:item.MaPhuTung,
@@ -22,15 +23,25 @@ const createPhieuNhap = async (PhieuNhapData) => {
       }
       const newctPhieuNhap = new ct_phieunhapModel(_ctnhappt);
       setTimeout(async () => {
-      const s= await newctPhieuNhap.save();
-        
-      }, 500);
+     newctPhieuNhap.save();
+      //ct_phieunhapModel.insertMany(newctPhieuNhap)
+      }, index*300);
     })
+
     //sua phu tung
+    let para=await paraModel.findOne({});
     let phutunglist=await phutungModel.find()
-    PhieuNhapData.listParts.map((item)=>{
+    PhieuNhapData.listParts.map((item,key)=>{
       let _phutung=phutunglist.filter(i=>i.MaPhuTung===item.MaPhuTung)
-      //_phutung.DonGia=item.
+      console.log(_phutung)
+      console.log(item)
+
+      _phutung[0].DonGia=item.price*para.TiLeTinhDonGiaBan;
+      _phutung[0].SoLuongTon= _phutung[0].SoLuongTon+Number(item.quantity);
+      setTimeout(async() => {
+        let resuls=await phutungModel.findOneAndUpdate({MaPhuTung:_phutung[0].MaPhuTung},_phutung[0])
+        console.log(resuls)
+      }, 100);
       console.log(_phutung)
       // const newctPhieuNhap = new ct_phieunhapModel(_ctnhappt);
       // newctPhieuNhap.save();
