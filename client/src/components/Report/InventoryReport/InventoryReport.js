@@ -8,10 +8,13 @@ import Row from "react-bootstrap/esm/Row";
 import Form from 'react-bootstrap/esm/Form'
 import Button from "react-bootstrap/Button";
 import FormGroup from "react-bootstrap/esm/FormGroup";
+import { TiExport } from 'react-icons/ti'
 import { TbReportSearch } from 'react-icons/tb'
 import CarDataService from "../../../services/CarDataService";
 import { format } from 'date-fns';
 import viLocale from 'date-fns/locale/vi';
+import * as XLSX from 'xlsx';
+
 function formatDateToVN(date) {
     let _date = new Date(date)
     return format(_date, 'MM/yyyy', { locale: viLocale });
@@ -49,11 +52,43 @@ export default function InventoryReport() {
         }
         setValidated(true);
     };
+    const exportToExcel = () => {
+        let _Car=Car.map((item,i)=>({
+            ...item,
+            HieuXe:item.HieuXe.TenHieuXe
+          }))
+        
+            const headers = ['STT', 'HieuXe','TenKH','TienNo'];
+            const worksheetData = [
+              ["",'Báo cáo tồn kho tháng '+formatDateToVN(Month)],
+              [""],
+              headers,
+              ..._Car.map((obj,key) => [key+1,obj.HieuXe, obj.TenKH,obj.TienNo]),
+            ];
+          const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet 1');
+      const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+  
+      saveAsExcelFile(excelBuffer, 'Báo cáo tồn kho tháng '+formatDateToVN(Month));
+    };
+  
+    const saveAsExcelFile = (buffer, fileName) => {
+      const data = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      const url = URL.createObjectURL(data);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `${fileName}.xlsx`;
+      link.click();
+    };
+
+
     useEffect(() => {
         CarDataService.getAllCar()
             .then((data) => {
                 setCar(data.data)
             })
+            console.log(Car)
     }, [])
     return (<div>
         <Container>
@@ -84,6 +119,12 @@ export default function InventoryReport() {
                 <div style={{ textAlign: 'center',marginBottom:'20px' }}>
                     <h1 style={{ color:'#0c828f' }}>Báo cáo tồn kho</h1>
                     <h4 style={{ color:'#0c828f' }}>Tháng {formatDateToVN(Month)}</h4>
+                </div>
+                <div style={{ textAlign: 'right' }}>
+                    <Button onClick={exportToExcel} type='submit' style={{ textAlign:'center',paddingTop:'9px' ,backgroundColor: '#0c828f', border: 'none',marginBottom: '10px' }} >
+                            Xuất báo cáo
+                        <TiExport style={{ fontSize: "25px", marginLeft: '6px' }} />
+                    </Button>
                 </div>
                 <Row style={{ textAlign: 'center', paddingBottom: '10px', fontWeight: '700', paddingRight: '6px' }}>
                     <Col xs='1' style={{ paddingRight: '5px' }}>
