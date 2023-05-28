@@ -73,6 +73,7 @@ function TabPanel(props) {
       fontWeight:'500',
       '&.Mui-selected': {
         color: '#0c828f',
+        fontWeight:'600'
       },
       '&.Mui-focusVisible': {
         backgroundColor: '#30c1d1',

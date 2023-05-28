@@ -23,8 +23,7 @@ const createPhieuNhap = async (PhieuNhapData) => {
       }
       const newctPhieuNhap = new ct_phieunhapModel(_ctnhappt);
       setTimeout(async () => {
-     newctPhieuNhap.save();
-      //ct_phieunhapModel.insertMany(newctPhieuNhap)
+        newctPhieuNhap.save();
       }, index*300);
     })
 
@@ -33,21 +32,13 @@ const createPhieuNhap = async (PhieuNhapData) => {
     let phutunglist=await phutungModel.find()
     PhieuNhapData.listParts.map((item,key)=>{
       let _phutung=phutunglist.filter(i=>i.MaPhuTung===item.MaPhuTung)
-      console.log(_phutung)
-      console.log(item)
-
       _phutung[0].DonGia=item.price*para.TiLeTinhDonGiaBan;
       _phutung[0].SoLuongTon= _phutung[0].SoLuongTon+Number(item.quantity);
       setTimeout(async() => {
         let resuls=await phutungModel.findOneAndUpdate({MaPhuTung:_phutung[0].MaPhuTung},_phutung[0])
-        console.log(resuls)
-      }, 100);
-      console.log(_phutung)
-      // const newctPhieuNhap = new ct_phieunhapModel(_ctnhappt);
-      // newctPhieuNhap.save();
+      }, key*100);
+      
     })
-
-   
 
     return savedPhieuNhap;
   } catch (error) {

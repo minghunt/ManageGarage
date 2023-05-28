@@ -37,7 +37,6 @@ const getAllCars = async ({filters = null}={}) => {
     if(filters.NgayNhan) {
       const NgayTN = new Date(filters.NgayNhan);
       let tomorrow = new Date(NgayTN)
-      
       query.NgayNhan = {
         $gte: new Date(tomorrow.setDate(NgayTN.getDate()-1)), 
         $lt: new Date(NgayTN)
