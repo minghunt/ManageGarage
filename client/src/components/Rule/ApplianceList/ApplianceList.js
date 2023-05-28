@@ -12,12 +12,16 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import PhuTungDataService from '../../../services/PhuTungDataService';
+import * as XLSX from 'xlsx'
 export default function ApplianceList() {
   const [reload, setReload] = React.useState(false);
   const [openWarn, setOpenWarn] = React.useState(false);
+  const [openSuccess, setOpenSuccess] = React.useState(false);
   const [AppliList, setAppliList] = React.useState([]);
+  const [data, setData] = React.useState(null);
 
   const [openAdd, setOpenAdd] = React.useState(false);
+  const [openAddFile, setOpenAddFile] = React.useState(false);
 
   const [openDelete, setOpenDelete] = React.useState(false);
 
@@ -26,6 +30,40 @@ export default function ApplianceList() {
   const [tenAppli, setTenAppli] = React.useState('');
   const [giaAppli, setGiaAppli] = React.useState(0);
 
+//Them tu file
+  const handleFileUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.readAsArrayBuffer(file)
+      reader.onload = (event) => {
+        const workbook = XLSX.read(event.target.result, { type: 'buffer' });
+        const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+        const jsonData = XLSX.utils.sheet_to_json(worksheet);
+
+        setData(jsonData);
+      };
+    } else setData(null)
+
+  }
+  const handleCloseAddFileAndUpdate = () => {
+    console.log(data)
+    console.log(openWarn)
+
+    if (data) {
+      data.map((item, key) => {
+        setTimeout(() => {
+          PhuTungDataService.createPhuTung(item)
+        }, 300 * key);
+        setOpenSuccess(true)
+        setTimeout(() => {
+        window.location.reload()
+          
+        }, data.length*300);
+      })
+    } else setOpenWarn(true)
+
+  }
   // Them 
   const handleClickOpenAdd = () => {
     setOpenAdd(true);
@@ -36,7 +74,7 @@ export default function ApplianceList() {
   const handleCloseAddAndUpdate = () => {
     if (tenAppli !== '' && giaAppli > 10000) {
       let Appli = {
-        SoLuongTon:0,
+        SoLuongTon: 0,
         DonGia: giaAppli,
         TenPhuTung: tenAppli
       }
@@ -141,14 +179,45 @@ export default function ApplianceList() {
             </Col>
           </Row>)}
         </div>
-        <Row style={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <Button onClick={()=>{handleClickOpenAdd();setTenAppli(''); setGiaAppli(0) }} style={{ marginTop: '15px', width: '30%', textTransform: 'none', backgroundColor: '#0c828f', color: 'white' }}>
-            Thêm Vật Tư
-            <MdLibraryAdd style={{ marginLeft: '6px', fontSize: '18px' }} />
-          </Button>
+        <Row style={{ justifyContent: 'flex-end', marginTop: '15px', }}>
+          <Col xs='3'>
+            <Button onClick={() => { setOpenAddFile(true) }} style={{ width: '100%', textTransform: 'none', backgroundColor: '#0c828f', color: 'white' }}>
+              Thêm từ file
+              <MdLibraryAdd style={{ marginLeft: '6px', fontSize: '18px' }} />
+            </Button>
+
+          </Col>
+          <Col xs='3'>
+            <Button onClick={() => { handleClickOpenAdd(); setTenAppli(''); setGiaAppli(0) }} style={{ width: '100%', textTransform: 'none', backgroundColor: '#0c828f', color: 'white' }}>
+              Thêm Vật Tư
+              <MdLibraryAdd style={{ marginLeft: '6px', fontSize: '18px' }} />
+            </Button>
+
+          </Col>
+
         </Row>
       </Container>
-
+      <Dialog className='Import File'
+        open={openAddFile}
+      >
+        <DialogTitle >
+          {"Chọn file từ máy"}
+        </DialogTitle>
+        <DialogContent>
+          <Form>
+            <Form.Group className="mb-3" >
+              <Form.Label>Chọn file excel danh sách phụ tùng</Form.Label>
+              <Form.Control required type='file' onChange={handleFileUpload} accept="application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+            </Form.Group>
+          </Form>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => {setOpenAddFile(false);setData(null)}}>Hủy bỏ</Button>
+          <Button onClick={handleCloseAddFileAndUpdate} autoFocus>
+            Thêm
+          </Button>
+        </DialogActions>
+      </Dialog>
       <Dialog className='Add'
         open={openAdd}
         onClose={handleCloseAdd}
@@ -220,10 +289,19 @@ export default function ApplianceList() {
         onClose={handleCloseWarn}
       >
         <DialogTitle >
-          {"Vui lòng nhập đúng định dạng"}
+          {"Vui lòng nhập đúng định dạng!"}
         </DialogTitle>
         <DialogActions>
           <Button onClick={handleCloseWarn}>OK</Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog className='Success'
+        open={openSuccess}
+      >
+        <DialogTitle >
+          {"Nhập tiền công thành công! Vui lòng chờ xử lý."}
+        </DialogTitle>
+        <DialogActions>
         </DialogActions>
       </Dialog>
     </div>

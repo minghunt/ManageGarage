@@ -13,10 +13,14 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import './WageList.css'
 import TienCongDataService from '../../../services/TienCongDataService';
+import * as XLSX from 'xlsx'
 export default function WageList(props) {
+  const [data, setData] = React.useState(null);
   const [reload, setReload] = React.useState(false);
   const [openWarn, setOpenWarn] = React.useState(false);
+  const [openSuccess, setOpenSuccess] = React.useState(false);
   const [WageList, setWageList] = React.useState([]);
+  const [openAddFile, setOpenAddFile] = React.useState(false);
 
   const [openAdd, setOpenAdd] = React.useState(false);
 
@@ -26,6 +30,41 @@ export default function WageList(props) {
   const [TCOnEdit, setTCOnEdit] = React.useState({});
   const [tenTC, setTenTC] = React.useState('');
   const [giaTC, setGiaTC] = React.useState(0);
+
+
+  //Them tu file
+
+  const handleFileUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.readAsArrayBuffer(file)
+      reader.onload = (event) => {
+        const workbook = XLSX.read(event.target.result, { type: 'buffer' });
+        const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+        const jsonData = XLSX.utils.sheet_to_json(worksheet);
+
+        setData(jsonData);
+      };
+    } else setData(null)
+
+  }
+  const handleCloseAddFileAndUpdate = () => {
+    console.log(data)
+    if (data) {
+      data.map((item, key) => {
+        setTimeout(() => {
+          TienCongDataService.createTienCong(item)
+        }, 300 * key);
+        setOpenSuccess(true)
+        setTimeout(() => {
+        window.location.reload()
+          
+        }, data.length*300);
+      })
+    }else setOpenWarn(true)
+
+  }
 
   // Them 
   const handleClickOpenAdd = () => {
@@ -141,14 +180,44 @@ export default function WageList(props) {
             </Col>
           </Row>)}
         </div>
-        <Row style={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <Button onClick={()=>{handleClickOpenAdd();setTenTC(''); setGiaTC(0) }} style={{ marginTop: '15px', width: '30%', textTransform: 'none', backgroundColor: '#0c828f', color: 'white' }}>
-            Thêm Tiền Công
-            <MdLibraryAdd style={{ marginLeft: '6px', fontSize: '18px' }} />
-          </Button>
+
+        <Row style={{ marginTop: '15px', justifyContent: 'flex-end' }} >
+          <Col xs='3'>
+            <Button onClick={() => { setOpenAddFile(true) }} style={{ width: '100%', textTransform: 'none', backgroundColor: '#0c828f', color: 'white' }}>
+              Thêm từ file
+              <MdLibraryAdd style={{ marginLeft: '6px', fontSize: '18px' }} />
+            </Button>
+
+          </Col>
+          <Col xs='3'>
+            <Button onClick={() => { handleClickOpenAdd(); setTenTC(''); setGiaTC(0) }} style={{ width: '100%', textTransform: 'none', backgroundColor: '#0c828f', color: 'white' }}>
+              Thêm Tiền Công
+              <MdLibraryAdd style={{ marginLeft: '6px', fontSize: '18px' }} />
+            </Button></Col>
         </Row>
       </Container>
 
+      <Dialog className='Import File'
+        open={openAddFile}
+      >
+        <DialogTitle >
+          {"Chọn file từ máy"}
+        </DialogTitle>
+        <DialogContent>
+          <Form>
+            <Form.Group className="mb-3" >
+              <Form.Label>Chọn file excel danh sách tiền công</Form.Label>
+              <Form.Control required type='file' onChange={handleFileUpload} accept="application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+            </Form.Group>
+          </Form>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => {setOpenAddFile(false);setData(null)}}>Hủy bỏ</Button>
+          <Button onClick={handleCloseAddFileAndUpdate} autoFocus>
+            Thêm
+          </Button>
+        </DialogActions>
+      </Dialog>
       <Dialog className='Add'
         open={openAdd}
         onClose={handleCloseAdd}
@@ -221,10 +290,19 @@ export default function WageList(props) {
         onClose={handleCloseWarn}
       >
         <DialogTitle >
-          {"Vui lòng nhập đúng định dạng"}
+          {"Vui lòng nhập đúng định dạng!"}
         </DialogTitle>
         <DialogActions>
           <Button onClick={handleCloseWarn}>OK</Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog className='Success'
+        open={openSuccess}
+      >
+        <DialogTitle >
+          {"Nhập tiền công thành công! Vui lòng chờ xử lý."}
+        </DialogTitle>
+        <DialogActions>
         </DialogActions>
       </Dialog>
     </div>

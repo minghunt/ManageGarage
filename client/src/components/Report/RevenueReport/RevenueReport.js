@@ -9,9 +9,13 @@ import Form from 'react-bootstrap/esm/Form'
 import Button from "react-bootstrap/Button";
 import FormGroup from "react-bootstrap/esm/FormGroup";
 import { TbReportSearch } from 'react-icons/tb'
+import { TiExport } from 'react-icons/ti'
+
 import CarDataService from "../../../services/CarDataService";
 import { format } from 'date-fns';
 import viLocale from 'date-fns/locale/vi';
+import * as XLSX from 'xlsx';
+
 function formatDateToVN(date) {
     let _date = new Date(date)
     return format(_date, 'MM/yyyy', { locale: viLocale });
@@ -49,6 +53,40 @@ export default function RevenueReport() {
         }
         setValidated(true);
     };
+
+    const exportToExcel = () => {
+        let _Car=Car.map((item,i)=>({
+          ...item,
+          HieuXe:item.HieuXe.TenHieuXe
+        }))
+      
+          const headers = ['STT', 'HieuXe','TenKH','TienNo'];
+          const worksheetData = [
+            ["",'Báo cáo doanh thu tháng '+formatDateToVN(Month)],
+            ["",'Tổng doanh thu: '],
+            [""],
+
+            headers,
+            ..._Car.map((obj,key) => [key+1,obj.HieuXe, obj.TenKH,obj.TienNo]),
+          ];
+        const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
+        //const worksheet = XLSX.utils.json_to_sheet(_Car);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet 1');
+        const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    
+        saveAsExcelFile(excelBuffer, 'Báo cáo doanh thu tháng '+formatDateToVN(Month));
+      };
+    
+      const saveAsExcelFile = (buffer, fileName) => {
+        const data = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        const url = URL.createObjectURL(data);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `${fileName}.xlsx`;
+        link.click();
+      };
+
     useEffect(() => {
         CarDataService.getAllCar()
             .then((data) => {
@@ -81,9 +119,15 @@ export default function RevenueReport() {
            
             <Col xs='12' className='CarBrandList-container mt-3' style={{ margin: '0px ', }} >
 
-                <div style={{ textAlign: 'center',marginBottom:'20px' }}>
+                <div style={{ textAlign: 'center'}}>
                     <h1 style={{ color:'#0c828f' }}>Báo cáo doanh thu Tháng {formatDateToVN(Month)}</h1>
                     <h4 style={{ color:'#0c828f' }}>Tổng doanh thu: {Number(1000).toLocaleString('vi', { style: 'currency', currency: 'VND' })}</h4>
+                </div>
+                <div style={{ textAlign: 'right' }}>
+                    <Button onClick={exportToExcel} type='submit' style={{ textAlign:'center',paddingTop:'9px' ,backgroundColor: '#0c828f', border: 'none',marginBottom: '10px' }} >
+                            Xuất báo cáo
+                        <TiExport style={{ fontSize: "25px", marginLeft: '6px' }} />
+                    </Button>
                 </div>
                 <Row style={{ textAlign: 'center', paddingBottom: '10px', fontWeight: '700', paddingRight: '6px' }}>
                     <Col xs='1' style={{ paddingRight: '5px' }}>
