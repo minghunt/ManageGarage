@@ -16,17 +16,33 @@ const createCar = async (carData) => {
 // Get all cars
 const getAllCars = async ({filters = null}={}) => {
 
-  let query;
+  let query = {};
   if(filters) {
-    if('MaHieuXe' in filters) {
-      query = { "MaHieuXe": { $eq: filters["MaHieuXe"]} }
-    }else if("TenKH" in filters) {
-      query = { $text: { $search: filters['TenKH'] } };
-    }else if("TienNo" in filters) {
-      query = { "TienNo": { $lte: filters['TienNo'] } }
+    if(filters.TenKH) {
+      query = { $text: { $search: filters.TenKH } }
     }
+    if (filters.BienSo){
+      query.BienSo = filters.BienSo
+    }
+    if(filters.MaHieuXe) {
+      query.MaHieuXe= filters.MaHieuXe
+    }
+    if(filters.NgayNhan) {
+      const NgayTN = new Date(filters.NgayNhan);
+      let tomorrow = new Date(NgayTN)
+      query.NgayNhan = {
+        $gte: new Date(tomorrow.setDate(NgayTN.getDate() - 1)),
+        $lt: new Date(NgayTN)
+      }
+    }
+    if(filters.DienThoai) {
+      query.DienThoai = filters.DienThoai 
+    }
+    if(filters.TienNo) {
+      query.TienNo = { $lte: filters.TienNo } 
+    }
+  
   }
-
   try {
     const carList = await carModel.find(query);
     return carList;

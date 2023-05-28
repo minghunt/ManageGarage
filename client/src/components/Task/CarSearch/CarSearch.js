@@ -8,7 +8,7 @@ import Form from 'react-bootstrap/esm/Form'
 import Button from "react-bootstrap/Button";
 import InputGroup from 'react-bootstrap/InputGroup';
 import CarDataService from "../../../services/CarDataService";
-import { format } from 'date-fns';
+import { format, setDate } from 'date-fns';
 import viLocale from 'date-fns/locale/vi';
 function formatDateToVN(date) {
     let _date = new Date(date)
@@ -17,27 +17,34 @@ function formatDateToVN(date) {
 const CarSearch = () => {
     const [HxeList, setHxeList] = useState([])
     const [CarList, setCarList] = useState([])
-    const [BienSo, setBienSo] = useState([])
+    const [BienSo, setBienSo] = useState('')
     const [TenKH, setTenKH] = useState('')
-    const [MaHieuXe, setMaHieuXe] = useState(0)
-    const [NgayNhan, setNgayNhan] = useState(Date)
-    const [DienThoai, setDienThoai] = useState([])
+    const [MaHieuXe, setMaHieuXe] = useState('')
+    const [NgayNhan, setNgayNhan] = useState('')
+    const [DienThoai, setDienThoai] = useState('')
 
     const handleBienSoChange = (e) => {
         setBienSo(e.target.value)
     }
     const handleTenKHChange = (e) => {
-        setTenKH(e.target.value)
+       setTenKH(e.target.value)
     }
     const handleHieuXeChange = (e) => {
-        setMaHieuXe(e.target.value)
+        if (e.target.value==='0') setMaHieuXe('')
+        else setMaHieuXe(e.target.value)
     }
     const handleDienThoaiChange = (e) => {
-        setDienThoai(e.target.value)
+      setDienThoai(e.target.value)
     }
     const handleDateChange = (e) => {
-        let _date = new Date(e.target.value)
+        if (e.target.value){
+            let _date = new Date(e.target.value)
         setNgayNhan(_date)
+        console.log(e.target.value)
+        
+    }
+        else setNgayNhan('')
+
     }
     const handleSubmitg = () => {
         let _Car = {
@@ -49,17 +56,21 @@ const CarSearch = () => {
         }
         console.log(_Car)
 
-        CarDataService.getAllCar(TenKH, BienSo, MaHieuXe, DienThoai, NgayNhan)
+        CarDataService.getAllCarFilter(BienSo, TenKH, DienThoai, MaHieuXe, NgayNhan)
             .then((data) => {
                 setCarList(data.data)
             })
     };
+    const handleRefresh = () => {
+        window.location.reload()
+    };
+    
     useEffect(() => {
-        CarsBrandDataService.getAllCarBrands(TenKH, BienSo, TenKH, BienSo, MaHieuXe, DienThoai, NgayNhan)
+        CarsBrandDataService.getAllCarBrands()
             .then((data) => {
                 setHxeList(data.data)
             })
-        CarDataService.getAllCar()
+            CarDataService.getAllCarFilter(BienSo, TenKH, DienThoai, MaHieuXe, NgayNhan)
             .then((data) => {
                 setCarList(data.data)
             })
@@ -82,7 +93,7 @@ const CarSearch = () => {
                                     <Form.Label>Hiệu xe</Form.Label>
                                     <Form.Control as="select" required style={{ maxHeight: '55px' }} onChange={handleHieuXeChange}>
                                         <option value={0}>
-                                            Chọn hiệu xe
+                                            Tất cả hiệu xe
                                         </option>
                                         {HxeList.map((item) => <option value={item.MaHieuXe}>
                                             {item.TenHieuXe}
@@ -114,9 +125,10 @@ const CarSearch = () => {
 
                         </Form>
                         <Button onClick={handleSubmitg} style={{ backgroundColor: '#0c828f', border: 'none',marginBottom:'10px' }} type="submit">Tìm kiếm</Button>
+                        <Button onClick={handleRefresh} style={{ backgroundColor: '#0c828f', border: 'none',marginBottom:'10px',marginLeft:'20px' }} type="submit">Làm mới</Button>
 
                     </Col>
-                    <Col xs='12' className='CarBrandList-container' style={{margin:'0px ',}} >
+                    {CarList.length!==0?<Col xs='12' className='CarBrandList-container' style={{margin:'0px ',}} >
                         <h2>
                             Danh sách xe
                         </h2>
@@ -162,14 +174,12 @@ const CarSearch = () => {
                                 <Col xs='2' style={{ borderLeft: 'black 0.5px solid' }}>
                                     {item.TienNo.toLocaleString('vi', { style: 'currency', currency: 'VND' })}
                                 </Col>
-
                                 <Col xs='2' style={{ borderLeft: 'black 0.5px solid' }}>
                                     {formatDateToVN(item.NgayNhan)}
-
                                 </Col>
                             </Row>)}
                         </div>
-                    </Col>
+                    </Col>:<Col xs='12'><h2>Không tìm thấy xe phù hợp</h2></Col>}
                 </Row>
             </Container>
         </div>

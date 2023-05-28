@@ -1,5 +1,8 @@
 import React, { useEffect } from "react";
 import { useState } from 'react';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogTitle from '@mui/material/DialogTitle';
 import Col from "react-bootstrap/esm/Col";
 import Container from "react-bootstrap/esm/Container";
 import {MdCreateNewFolder} from 'react-icons/md'
@@ -8,7 +11,7 @@ import Form from 'react-bootstrap/esm/Form'
 import Button from "react-bootstrap/Button";
 import CarDataService from "../../../services/CarDataService";
 import PhieuThuDataService from "../../../services/PhieuThuDataService";
-
+import ParaDataService from "../../../services/ParaDataService";
 import { format } from 'date-fns';
 import viLocale from 'date-fns/locale/vi';
 function formatDateToVN(date) {
@@ -17,12 +20,26 @@ function formatDateToVN(date) {
 }
 const CarCheckout = () => {
     const [Car, setCar] = useState([])
+    const [Para, setPara] = useState({})
+
+    const [openWarnBienSo, setOpenWarnBienSo] = useState(0)
+    const [openWarnTienThu, setOpenWarnTienThu] = useState(0)
+
+    const [openSuccess, setOpenSuccess] = useState(0)
     const [BienSo, setBienSo] = useState([])
     const [TienThu, setTienThu] = useState([])
 
     const [NgayNhan, setNgayNhan] = useState(Date)
     const [validated, setValidated] = useState(false);
 
+
+    const handleCloseWarnBienSo= ()=>{
+        setOpenWarnBienSo(false)
+
+    }
+    const handleCloseWarnTienThu= ()=>{
+        setOpenWarnTienThu(false)
+    }
     const handleSubmit = (event) => {
         const form = event.currentTarget;
         if (form.checkValidity() === false) {
@@ -30,10 +47,26 @@ const CarCheckout = () => {
             event.stopPropagation();
         }
         else {
+            event.preventDefault();
+            event.stopPropagation();
+            if (Car.length!==1){
+                event.preventDefault();
+                event.stopPropagation();
+                setOpenWarnBienSo(true)
+                return
+            }
+            if (Para.KiemTraTienThu&&TienThu>Car[0].TienNo){
+                setOpenWarnTienThu(true)
+                return
+            }
+            setOpenSuccess(true)
+             setTimeout(() => {
+                 window.location.reload()
+             }, 700);
             let _PhieuThu={
                 NgayThu:NgayNhan,
                 SoTienThu:TienThu,
-                MaXe:1
+                MaXe:Car[0].MaXe
             }
             console.log('phieuthu:',_PhieuThu)
             PhieuThuDataService.createPhieuThu(_PhieuThu)
@@ -46,18 +79,27 @@ const CarCheckout = () => {
     const handleTienThuChange = (e) => {
         setTienThu(e.target.value)
     }
-    
     const handleDateChange = (e) => {
         let _date = new Date(e.target.value)
         setNgayNhan(_date)
     }
 
     useEffect(() => {
-        CarDataService.getAllCar()
+        CarDataService.getCarByBienSo(BienSo)
             .then((data) => {
                 setCar(data.data)
             })
+        ParaDataService.getPara()
+            .then((data)=>{
+                setPara(data.data[0])
+            })
     }, [])
+    useEffect(() => {
+        CarDataService.getCarByBienSo(BienSo)
+            .then((data) => {
+                setCar(data.data)
+            })
+    }, [BienSo])
     return (
         <div>
             <Container >
@@ -159,6 +201,37 @@ const CarCheckout = () => {
                     </Col>
                 </Row>
             </Container>
+            <Dialog className='WarnBienSo'
+                open={openWarnBienSo}
+                onClose={handleCloseWarnBienSo}
+            >
+                <DialogTitle >
+                    {"Vui lòng nhập đúng biển số!"}
+                </DialogTitle>
+                <DialogActions>
+                    <Button  style={{ backgroundColor: '#0c828f', border: 'none' }} onClick={handleCloseWarnBienSo}>OK</Button>
+                </DialogActions>
+            </Dialog>
+            <Dialog className='WarnTienThu'
+                open={openWarnTienThu}
+                onClose={handleCloseWarnTienThu}
+            >
+                <DialogTitle >
+                    {"Tiền thu vượt quá tiền nợ!"}
+                </DialogTitle>
+                <DialogActions>
+                    <Button  style={{ backgroundColor: '#0c828f', border: 'none' }} onClick={handleCloseWarnTienThu}>OK</Button>
+                </DialogActions>
+            </Dialog>
+            <Dialog className='Success'
+                open={openSuccess}
+            >
+                <DialogTitle >
+                    {"Nhập vật tư thành công! Vui lòng chờ xử lý."}
+                </DialogTitle>
+                <DialogActions>
+                </DialogActions>
+            </Dialog>
         </div>
     )
 }
