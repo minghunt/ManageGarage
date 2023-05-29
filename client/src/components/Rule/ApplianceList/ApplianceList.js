@@ -268,7 +268,7 @@ export default function ApplianceList() {
               <Form.Control type='text' defaultValue={''} onChange={handleTenAppliChange} />
             </Form.Group>
             <Form.Group className="mb-3" >
-              <Form.Label>Nhập giá Vật tư(>10.000đ)</Form.Label>
+              <Form.Label>Nhập giá Vật tư(&gt;10.000đ)</Form.Label>
               <Form.Control type='number' min={10000} step={40000} defaultValue={0} onChange={handleGiaAppliChange} />
             </Form.Group>
           </Form>
@@ -308,7 +308,7 @@ export default function ApplianceList() {
               <Form.Control type='text' defaultValue={AppliOnEdit.TenPhuTung} onChange={handleTenAppliChange} />
             </Form.Group>
             <Form.Group className="mb-3" >
-              <Form.Label>Nhập giá Vật tư(>10.000đ) </Form.Label>
+              <Form.Label>Nhập giá Vật tư(&gt;10.000đ) </Form.Label>
               <Form.Control type='number' min={10000} step={40000} defaultValue={AppliOnEdit.DonGia} onChange={handleGiaAppliChange} />
             </Form.Group>
           </Form>

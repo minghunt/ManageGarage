@@ -196,14 +196,12 @@ export default function WageList(props) {
             </Col>
           </Row>)}
         </div>
-
         <Row style={{ marginTop: '15px', justifyContent: 'flex-end' }} >
           <Col xs='3'>
             <Button onClick={() => { setOpenAddFile(true) }} style={{ width: '100%', textTransform: 'none', backgroundColor: '#0c828f', color: 'white' }}>
               Thêm từ file
               <SiMicrosoftexcel style={{ marginLeft: '6px', fontSize: '18px' }} />
             </Button>
-
           </Col>
           <Col xs='3'>
             <Button onClick={() => { handleClickOpenAdd(); setTenTC(''); setGiaTC(0) }} style={{ width: '100%', textTransform: 'none', backgroundColor: '#0c828f', color: 'white' }}>
@@ -270,7 +268,7 @@ export default function WageList(props) {
               <Form.Control type='text' defaultValue={''} onChange={handleTenTCChange} />
             </Form.Group>
             <Form.Group className="mb-3" >
-              <Form.Label>Nhập giá tiền công(>10.000đ)</Form.Label>
+              <Form.Label>Nhập giá tiền công(&gt;10.000đ)</Form.Label>
               <Form.Control type='number' min={10000} step={40000} defaultValue={0} onChange={handleGiaTCChange} />
             </Form.Group>
           </Form>
@@ -311,7 +309,7 @@ export default function WageList(props) {
               <Form.Control type='text' defaultValue={TCOnEdit.MoTa} onChange={handleTenTCChange} />
             </Form.Group>
             <Form.Group className="mb-3" >
-              <Form.Label>Nhập giá tiền công(>10.000đ) </Form.Label>
+              <Form.Label>Nhập giá tiền công(&gt;10.000đ) </Form.Label>
               <Form.Control type='number' min={10000} step={40000} defaultValue={TCOnEdit.TienCong} onChange={handleGiaTCChange} />
             </Form.Group>
           </Form>
