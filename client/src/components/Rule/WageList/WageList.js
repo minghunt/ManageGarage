@@ -2,11 +2,13 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import { MdDeleteForever, MdLibraryAdd } from 'react-icons/md'
 import { BiEdit } from 'react-icons/bi'
+import { SiMicrosoftexcel } from 'react-icons/si'
+
 import React, { useEffect } from "react";
 import Container from 'react-bootstrap/esm/Container';
 import Form from 'react-bootstrap/Form';
 import Button from '@mui/material/Button';
-
+import Table from 'react-bootstrap/esm/Table'
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -51,18 +53,32 @@ export default function WageList(props) {
   }
   const handleCloseAddFileAndUpdate = () => {
     console.log(data)
+    let check = true
     if (data) {
-      data.map((item, key) => {
-        setTimeout(() => {
-          TienCongDataService.createTienCong(item)
-        }, 300 * key);
-        setOpenSuccess(true)
-        setTimeout(() => {
-        window.location.reload()
-          
-        }, data.length*300);
+      data.map((item) => {
+        if (item.MoTa === null || typeof (item.TienCong) !== typeof (0) ) {
+          setOpenWarn(true)
+          check = false
+          return
+        }
       })
-    }else setOpenWarn(true)
+      if (check) {
+        data.map((_item, key) => {
+          let item={
+            MoTa:_item.MoTa,
+            TienCong:_item.TienCong
+          }
+          setTimeout(() => {
+            TienCongDataService.createTienCong(item)
+          }, 800 * key);
+          setOpenSuccess(true)
+          setTimeout(() => {
+            window.location.reload()
+
+          }, data.length * 800);
+        })
+      }
+    } else setOpenWarn(true)
 
   }
 
@@ -180,14 +196,12 @@ export default function WageList(props) {
             </Col>
           </Row>)}
         </div>
-
         <Row style={{ marginTop: '15px', justifyContent: 'flex-end' }} >
           <Col xs='3'>
             <Button onClick={() => { setOpenAddFile(true) }} style={{ width: '100%', textTransform: 'none', backgroundColor: '#0c828f', color: 'white' }}>
               Thêm từ file
-              <MdLibraryAdd style={{ marginLeft: '6px', fontSize: '18px' }} />
+              <SiMicrosoftexcel style={{ marginLeft: '6px', fontSize: '18px' }} />
             </Button>
-
           </Col>
           <Col xs='3'>
             <Button onClick={() => { handleClickOpenAdd(); setTenTC(''); setGiaTC(0) }} style={{ width: '100%', textTransform: 'none', backgroundColor: '#0c828f', color: 'white' }}>
@@ -201,9 +215,31 @@ export default function WageList(props) {
         open={openAddFile}
       >
         <DialogTitle >
-          {"Chọn file từ máy"}
+          {"Vui lòng chọn file theo định dạng"}
         </DialogTitle>
         <DialogContent>
+        <Table striped bordered hover>
+            <thead>
+              <tr>
+                <th>MoTa</th>
+                <th>TienCong</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Rửa kính</td>
+                <td>100000</td>
+              </tr>
+              <tr>
+                <td>Thay bánh</td>
+                <td>1500000</td>
+              </tr>
+              <tr>
+                <td>Thay nhớt</td>
+                <td>500000</td>
+              </tr>
+            </tbody>
+          </Table>
           <Form>
             <Form.Group className="mb-3" >
               <Form.Label>Chọn file excel danh sách tiền công</Form.Label>
@@ -212,7 +248,7 @@ export default function WageList(props) {
           </Form>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => {setOpenAddFile(false);setData(null)}}>Hủy bỏ</Button>
+          <Button onClick={() => { setOpenAddFile(false); setData(null) }}>Hủy bỏ</Button>
           <Button onClick={handleCloseAddFileAndUpdate} autoFocus>
             Thêm
           </Button>
@@ -232,7 +268,7 @@ export default function WageList(props) {
               <Form.Control type='text' defaultValue={''} onChange={handleTenTCChange} />
             </Form.Group>
             <Form.Group className="mb-3" >
-              <Form.Label>Nhập giá tiền công(>10.000đ)</Form.Label>
+              <Form.Label>Nhập giá tiền công(&gt;10.000đ)</Form.Label>
               <Form.Control type='number' min={10000} step={40000} defaultValue={0} onChange={handleGiaTCChange} />
             </Form.Group>
           </Form>
@@ -273,7 +309,7 @@ export default function WageList(props) {
               <Form.Control type='text' defaultValue={TCOnEdit.MoTa} onChange={handleTenTCChange} />
             </Form.Group>
             <Form.Group className="mb-3" >
-              <Form.Label>Nhập giá tiền công(>10.000đ) </Form.Label>
+              <Form.Label>Nhập giá tiền công(&gt;10.000đ) </Form.Label>
               <Form.Control type='number' min={10000} step={40000} defaultValue={TCOnEdit.TienCong} onChange={handleGiaTCChange} />
             </Form.Group>
           </Form>
