@@ -2,10 +2,12 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import { MdDeleteForever, MdLibraryAdd } from 'react-icons/md'
 import { BiEdit } from 'react-icons/bi'
+import { SiMicrosoftexcel } from 'react-icons/si'
 import React, { useEffect } from "react";
 import Container from 'react-bootstrap/esm/Container';
 import Form from 'react-bootstrap/Form';
 import Button from '@mui/material/Button';
+import Table from 'react-bootstrap/Table';
 
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -30,7 +32,7 @@ export default function ApplianceList() {
   const [tenAppli, setTenAppli] = React.useState('');
   const [giaAppli, setGiaAppli] = React.useState(0);
 
-//Them tu file
+  //Them tu file
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -48,19 +50,31 @@ export default function ApplianceList() {
   }
   const handleCloseAddFileAndUpdate = () => {
     console.log(data)
-    console.log(openWarn)
-
+    let check = true
     if (data) {
-      data.map((item, key) => {
-        setTimeout(() => {
-          PhuTungDataService.createPhuTung(item)
-        }, 300 * key);
-        setOpenSuccess(true)
-        setTimeout(() => {
-        window.location.reload()
-          
-        }, data.length*300);
+      data.map((item) => {
+        if (item.TenPhuTung === null || typeof (item.DonGia) !== typeof (0)) {
+          setOpenWarn(true)
+          check = false
+          return
+        }
       })
+      if (check) {
+        data.map((_item, key) => {
+          let item = {
+            DonGia: _item.DonGia,
+            TenPhuTung: _item.TenPhuTung,
+            SoLuongTon: 0
+          }
+          setTimeout(() => {
+            PhuTungDataService.createPhuTung(item)
+          }, 800 * key);
+          setOpenSuccess(true)
+          setTimeout(() => {
+            window.location.reload()
+          }, data.length * 800);
+        })
+      }
     } else setOpenWarn(true)
 
   }
@@ -183,7 +197,7 @@ export default function ApplianceList() {
           <Col xs='3'>
             <Button onClick={() => { setOpenAddFile(true) }} style={{ width: '100%', textTransform: 'none', backgroundColor: '#0c828f', color: 'white' }}>
               Thêm từ file
-              <MdLibraryAdd style={{ marginLeft: '6px', fontSize: '18px' }} />
+              <SiMicrosoftexcel style={{ marginLeft: '6px', fontSize: '18px' }} />
             </Button>
 
           </Col>
@@ -201,9 +215,31 @@ export default function ApplianceList() {
         open={openAddFile}
       >
         <DialogTitle >
-          {"Chọn file từ máy"}
+          {"Vui lòng chọn file theo định dạng"}
         </DialogTitle>
         <DialogContent>
+          <Table striped bordered hover>
+            <thead>
+              <tr>
+                <th>TenPhuTung</th>
+                <th>DonGia</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Kính Vkool</td>
+                <td>1000000</td>
+              </tr>
+              <tr>
+                <td>Bánh xe</td>
+                <td>1500000</td>
+              </tr>
+              <tr>
+                <td>Gạt mưa </td>
+                <td>500000</td>
+              </tr>
+            </tbody>
+          </Table>
           <Form>
             <Form.Group className="mb-3" >
               <Form.Label>Chọn file excel danh sách phụ tùng</Form.Label>
@@ -212,7 +248,7 @@ export default function ApplianceList() {
           </Form>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => {setOpenAddFile(false);setData(null)}}>Hủy bỏ</Button>
+          <Button onClick={() => { setOpenAddFile(false); setData(null) }}>Hủy bỏ</Button>
           <Button onClick={handleCloseAddFileAndUpdate} autoFocus>
             Thêm
           </Button>
