@@ -12,8 +12,9 @@ import {
   carRoutes,
   phieusuachuaRoutes,
   phieuthuRoutes,
-  phieunhapRoutes
-
+  phieunhapRoutes,
+  baocaotonRoutes,
+  baocaotonthangRoutes
 } from "./routes/index.js";
 
 const start = async () => {
@@ -35,6 +36,8 @@ const start = async () => {
   app.use("/api/phieunhap", phieunhapRoutes);
   app.use("/api/phieusuachua", phieusuachuaRoutes);
   app.use("/api/phieuthu", phieuthuRoutes);
+  app.use("/api/baocaotonthang", baocaotonthangRoutes);
+  app.use("/api/baocaoton", baocaotonRoutes);
 
 
   // Start server
