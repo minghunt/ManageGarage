@@ -8,6 +8,9 @@ export { default as carRoutes } from './carRoutes.js';
 export { default as phieusuachuaRoutes } from './phieusuachuaRoutes.js';
 export { default as phieuthuRoutes } from './phieuthuRoutes.js';
 export { default as phieunhapRoutes } from './phieunhapRoutes.js';
+export { default as baocaotonthangRoutes } from './baocaotonthangRoutes.js';
+export { default as baocaotonRoutes } from './baocaotonRoutes.js';
+
 
 
 
