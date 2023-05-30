@@ -43,6 +43,6 @@ content-type: application/json
 }
 
 
-# API login
+# API Get Car
 ###
 GET http://localhost:8000/api/car?MaHieuXe=1&TienNo=10
