@@ -15,8 +15,8 @@ async function createReport(req, res) {
 // Get a car by Month
 async function getReportByMonth(req, res) {
     try {
-      const month = req.query.month;
-      const year = req.query.year;
+      const month = Number(req.query.month);
+      const year = Number(req.query.year);
       console.log(month)
       const report = await baocaotonDAO.getReportByMonth(month, year);
       if (report) {
