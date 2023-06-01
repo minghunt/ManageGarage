@@ -5,8 +5,9 @@ const phieusuachuaSchema = new mongoose.Schema({
         type: Number,
         unique: true,
     },
-    MaXe: {
-        type: String
+    BienSo: {
+        type: String,
+        ref: 'xe'
     },
     NgaySC: {
         type: Date
@@ -25,6 +26,6 @@ phieusuachuaSchema.pre('save', async function (next) {
     next();
 });
 
-const psc = mongoose.model('phieusuachuas', phieusuachuaSchema);
+const psc = mongoose.model('phieusuachua', phieusuachuaSchema);
 
 export default psc;
