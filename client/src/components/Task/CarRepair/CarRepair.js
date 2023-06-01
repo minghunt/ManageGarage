@@ -166,16 +166,33 @@ const RepairForm = () => {
         } 
         else {
             setIsLoading(true);
+
             const licensePlate = event.target.elements.licensePlate.value;
             const repairDate = event.target.elements.repairDate.value;
             const totalPrice = totalAmount;
-            
+         
+            const dsPhuTung = parts.map((part) => {
+                return {
+                    MaPhuTung: part.MaPhuTung,
+                    SoLuong: part.quantity,
+                    ThanhTien: part.total,
+                };
+            });
+            const dsNoiDung = labors.map((labor) => {
+                return {
+                    MaTienCong: labor.MaTienCong,
+                    MoTa: labor.nameLabor,
+                    dsPhuTung: dsPhuTung
+                };
+            });
+
             const phieusuachua = {
                 BienSo: licensePlate,
                 NgaySC: repairDate,
                 TongTien: totalPrice,
                 dsNoiDung: labors,
                 dsPhuTung: parts
+
             };
             console.log("phieusuachua: ", phieusuachua);
             PscDataService.postPSC(phieusuachua)
