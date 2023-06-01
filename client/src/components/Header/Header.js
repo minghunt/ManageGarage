@@ -46,7 +46,9 @@ const Header = () => {
                     </Nav>
                     <Nav>
                         <NavDropdown title="Tài khoản" id="collasible-nav-dropdown">
-                            <NavDropdown.Item href="">Hồ sơ</NavDropdown.Item>
+                            <NavDropdown.Item>
+                                <Link className="header-nav-link" to={"/user"}>Hồ sơ</Link>
+                            </NavDropdown.Item>
                             <NavDropdown.Item href="">
                                 Trợ giúp
                             </NavDropdown.Item>
