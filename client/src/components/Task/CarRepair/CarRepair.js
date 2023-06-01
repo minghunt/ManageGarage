@@ -123,6 +123,9 @@ const RepairForm = () => {
     const handleCloseEdit = (e) => {
         setOpenEdit(false)
     }
+    const handleCloseSuccess = (e) => {
+        setOpenSuccess(false)
+    }
     // Fetch data
     useEffect(() => {
         PhuTungDataService.getAllPhuTung()
@@ -163,37 +166,23 @@ const RepairForm = () => {
         } 
         else {
             setIsLoading(true);
-            // Tạo các biến để lưu thông tin từ các trường input
             const licensePlate = event.target.elements.licensePlate.value;
             const repairDate = event.target.elements.repairDate.value;
             const totalPrice = totalAmount;
             
-            const dsPhuTung = parts.map((part) => {
-                return {
-                    MaPhuTung: part.MaPhuTung,
-                    SoLuong: part.quantity,
-                    ThanhTien: part.total,
-                };
-            });
-            const dsNoiDung = labors.map((labor) => {
-                return {
-                    MaTienCong: labor.MaTienCong,
-                    MoTa: labor.nameLabor,
-                    dsPhuTung: dsPhuTung
-                };
-            });
             const phieusuachua = {
                 BienSo: licensePlate,
                 NgaySC: repairDate,
                 TongTien: totalPrice,
-                listNoiDung: dsNoiDung
+                dsNoiDung: labors,
+                dsPhuTung: parts
             };
             console.log("phieusuachua: ", phieusuachua);
             PscDataService.postPSC(phieusuachua)
             .then((response) => {
                 if(response.status === 200) {
                     setIsLoading(false);
-                    // setOpenSuccess(true);
+                    setOpenSuccess(true);
                     // setTimeout(() => {
                     //     window.location.reload();
                     // }, 1000);
@@ -462,10 +451,13 @@ const RepairForm = () => {
         </DialogActions>
     </Dialog>
 
-    <Dialog className='Success' open={openSuccess}>
+    <Dialog className='Success' open={openSuccess} onClose={handleCloseSuccess}>
         <DialogTitle >
             {"Nhập vật tư thành công! Vui lòng chờ xử lý."}
         </DialogTitle>
+        <DialogActions>
+            <Button style={{ backgroundColor: '#0c828f', border: 'none' }} onClick={handleCloseSuccess}>OK</Button>
+        </DialogActions>
     </Dialog>
     </>);
 };

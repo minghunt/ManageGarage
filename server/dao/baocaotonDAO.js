@@ -50,7 +50,7 @@ cron.schedule('* * * * *', async() => {
         }
        }
   ]);
-  console.log(ct_phieunhap);
+  // console.log(ct_phieunhap);
   ct_phieunhap.map((item)=>{
     const data = {
       Thang: currentMonth,

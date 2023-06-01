@@ -8,7 +8,6 @@ router.get('/', usersController.getAllUsers);
 
 // Route to get a user by ID
 // router.get('/:id', usersController.getUserById);
-router.get('/:id', usersController.getUserById);
 router.get('/:email', usersController.getUserByEmail);
 
 // get user purchased courses
