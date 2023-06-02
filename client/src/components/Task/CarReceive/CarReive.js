@@ -29,7 +29,7 @@ const CarReceive = () => {
     
     const [BienSo, setBienSo] = useState([])
     const [TenKH, setTenKH] = useState('')
-    const [MaHieuXe, setMaHieuXe] = useState(1)
+    const [MaHieuXe, setMaHieuXe] = useState(3)
     const [NgayNhan, setNgayNhan] = useState(Date)
 
     const [DienThoai, setDienThoai] = useState([])
@@ -158,11 +158,8 @@ const CarReceive = () => {
                                         {HxeList.map((item) => <option value={item.MaHieuXe}>
                                             {item.TenHieuXe}
                                         </option>)}
-
                                     </Form.Control>
-
                                 </Form.Group>
-
                             </Row>
                             <Row className="mb-3">
                                 <Form.Group as={Col} md="6" controlId="validationCustom03">
@@ -222,11 +219,9 @@ const CarReceive = () => {
                                 </Col>
                                 <Col xs='3' style={{ borderLeft: 'black 0.5px solid' }}>
                                     {item.TenKH}
-
                                 </Col>
                                 <Col xs='2' style={{ borderLeft: 'black 0.5px solid' }}>
                                     {item.DienThoai}
-
                                 </Col>
                                 <Col xs='2' style={{ borderLeft: 'black 0.5px solid' }}>
                                     {formatDateToVN(item.NgayNhan)}

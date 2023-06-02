@@ -1,40 +1,54 @@
 import React, { useEffect, useState } from "react";
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogTitle from '@mui/material/DialogTitle';
 import Col from "react-bootstrap/esm/Col";
 import Container from "react-bootstrap/esm/Container";
 import Row from "react-bootstrap/esm/Row";
 import Form from 'react-bootstrap/esm/Form'
 import Button from "react-bootstrap/Button";
-import FormGroup from "react-bootstrap/esm/FormGroup";
 import { TbReportSearch } from 'react-icons/tb'
 import { TiExport } from 'react-icons/ti'
 
-import CarDataService from "../../../services/CarDataService";
+import RevenueReportDataService from "../../../services/RevenueReportDataService";
+import * as XLSX from 'xlsx';
+
 import { format } from 'date-fns';
 import viLocale from 'date-fns/locale/vi';
-import * as XLSX from 'xlsx';
 
 function formatDateToVN(date) {
     let _date = new Date(date)
     return format(_date, 'MM/yyyy', { locale: viLocale });
 }
-export default function RevenueReport() {
-    const [maxMonth, setMaxMonth] = useState(getCurrentMonth());
-    const [Car, setCar] = useState([]);
-    const [Month, setMonth] = useState(Date);
 
-    function getCurrentMonth() {
-        const currentDate = new Date();
-        const currentYear = currentDate.getFullYear();
-        const currentMonth = currentDate.getMonth() + 1; // Tháng trong JavaScript bắt đầu từ 0
-        return `${currentYear}-${currentMonth < 10 ? "0" + currentMonth : currentMonth}`;
-    }
+function getMaxMonthValue() {
+    // Tạo một đối tượng ngày hiện tại
+    const currentDate = new Date();
+
+    // Lấy tháng và năm của ngày hiện tại
+    const currentMonth = currentDate.getMonth();
+    console.log(currentMonth)
+
+    const currentYear = currentDate.getFullYear();
+
+    // Tính tháng và năm của tháng trước
+    const previousMonth = currentMonth;
+    const previousYear = currentMonth === 0 ? currentYear - 1 : currentYear;
+
+    // Định dạng chuỗi tháng và năm dạng "YYYY-MM"
+    const maxMonthValue = `${previousYear}-${String(previousMonth).padStart(2, '0')}`;
+
+    // Gán giá trị tối đa cho thuộc tính max của trường input month
+    console.log(maxMonthValue)
+    return maxMonthValue;
+}
+export default function RevenueReport() {
+    const [maxMonth, setMaxMonth] = useState(getMaxMonthValue());
+    const [Report, setReport] = useState([])
+    const [ReportTotal, setReportTotal] = useState(null)
+    const [Month, setMonth] = useState(Date);
     const [validated, setValidated] = useState(false);
 
     const handleDateChange = e => {
-        if (e.target.value){
+        setReportTotal(null)
+        if (e.target.value) {
             setMonth(e.target.value)
             return
         }
@@ -46,53 +60,51 @@ export default function RevenueReport() {
             event.stopPropagation();
         }
         else {
-
+            let a = {
+                Thang: Month
+            }
+            RevenueReportDataService.getRevenueReport(a)
+                .then((data) => {
+                    setReport(data.data.resCT_DoanhThuThang)
+                    setReportTotal(data.data.RevenueReport)
+                })
             event.preventDefault();
             event.stopPropagation();
-           
         }
         setValidated(true);
     };
 
     const exportToExcel = () => {
-        let _Car=Car.map((item,i)=>({
-          ...item,
-          HieuXe:item.HieuXe.TenHieuXe
+        let _Report = Report.map((item, i) => ({
+            ...item,
+            HieuXe: item.HieuXe.TenHieuXe,
+            TiLe: (item.ThanhTien / ReportTotal.TongDoanhThu * 100).toFixed(2) + '%'
         }))
-      
-          const headers = ['STT', 'HieuXe','TenKH','TienNo'];
-          const worksheetData = [
-            ["",'Báo cáo doanh thu tháng '+formatDateToVN(Month)],
-            ["",'Tổng doanh thu: '],
+        const headers = ['STT', 'Hiệu xe', 'Số lượt sửa', 'Thành tiền', 'Tỉ lệ'];
+        const worksheetData = [
+            ["", 'Báo cáo doanh thu tháng ' + formatDateToVN(Month)],
+            ["", 'Tổng doanh thu: ' + Number(ReportTotal.TongDoanhThu).toLocaleString('vi', { style: 'currency', currency: 'VND' })],
             [""],
-
             headers,
-            ..._Car.map((obj,key) => [key+1,obj.HieuXe, obj.TenKH,obj.TienNo]),
-          ];
+            ..._Report.map((obj, key) => [key + 1, obj.HieuXe, obj.SoLuotSua, obj.ThanhTien, obj.TiLe]),
+        ];
         const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
         //const worksheet = XLSX.utils.json_to_sheet(_Car);
         const workbook = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet 1');
         const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-    
-        saveAsExcelFile(excelBuffer, 'Báo cáo doanh thu tháng '+formatDateToVN(Month));
-      };
-    
-      const saveAsExcelFile = (buffer, fileName) => {
+
+        saveAsExcelFile(excelBuffer, 'Báo cáo doanh thu tháng ' + formatDateToVN(Month));
+    };
+    const saveAsExcelFile = (buffer, fileName) => {
         const data = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
         const url = URL.createObjectURL(data);
         const link = document.createElement('a');
         link.href = url;
         link.download = `${fileName}.xlsx`;
         link.click();
-      };
+    };
 
-    useEffect(() => {
-        CarDataService.getAllCar()
-            .then((data) => {
-                setCar(data.data)
-            })
-    }, [])
     return (<div>
         <Container>
             <h2>Nhập thông tin</h2>
@@ -112,20 +124,17 @@ export default function RevenueReport() {
                             <TbReportSearch style={{ fontSize: "20px", marginLeft: '6px' }} />
                         </Button>
                     </Form.Group>
-
                 </Row>
-
             </Form>
-           
-            <Col xs='12' className='CarBrandList-container mt-3' style={{ margin: '0px ', }} >
+            {ReportTotal === null ? <p>Vui lòng chọn tháng xem báo cáo</p> : <Col xs='12' className='CarBrandList-container mt-3' style={{ margin: '0px ', }} >
 
-                <div style={{ textAlign: 'center'}}>
-                    <h1 style={{ color:'#0c828f' }}>Báo cáo doanh thu Tháng {formatDateToVN(Month)}</h1>
-                    <h4 style={{ color:'#0c828f' }}>Tổng doanh thu: {Number(1000).toLocaleString('vi', { style: 'currency', currency: 'VND' })}</h4>
+                <div style={{ textAlign: 'center' }}>
+                    <h1 style={{ color: '#0c828f' }}>Báo cáo doanh thu Tháng {formatDateToVN(Month)}</h1>
+                    <h4 style={{ color: '#0c828f' }}>Tổng doanh thu: {Number(ReportTotal.TongDoanhThu).toLocaleString('vi', { style: 'currency', currency: 'VND' })}</h4>
                 </div>
                 <div style={{ textAlign: 'right' }}>
-                    <Button onClick={exportToExcel} type='submit' style={{ textAlign:'center',paddingTop:'9px' ,backgroundColor: '#0c828f', border: 'none',marginBottom: '10px' }} >
-                            Xuất báo cáo
+                    <Button onClick={exportToExcel} type='submit' style={{ textAlign: 'center', paddingTop: '9px', backgroundColor: '#0c828f', border: 'none', marginBottom: '10px' }} >
+                        Xuất báo cáo
                         <TiExport style={{ fontSize: "25px", marginLeft: '6px' }} />
                     </Button>
                 </div>
@@ -145,31 +154,30 @@ export default function RevenueReport() {
                     <Col >
                         Tỉ lệ
                     </Col>
-
                 </Row>
                 <div style={{ maxHeight: "500px", overflow: "hidden", overflowY: 'visible', paddingRight: '5px' }}>
-                    {Car.length === 0 ? <p>Không tìm thấy xe phù hợp</p> : Car.map((item, key) => <Row style={{ textAlign: 'center', padding: '8xp 10px', lineHeight: '27px', borderBottom: 'black 0.5px solid' }}>
+                    {Report.length === 0 ? <p></p> : Report.map((item, key) => <Row style={{ textAlign: 'center', padding: '8xp 10px', lineHeight: '27px', borderBottom: 'black 0.5px solid' }}>
                         <Col xs='1' style={{ borderLeft: 'black 0.5px solid', paddingRight: '5px' }}>
                             {key + 1}
                         </Col>
                         <Col style={{ borderLeft: 'black 0.5px solid' }}>
                             {item.HieuXe.TenHieuXe}
                         </Col>
-                        <Col  style={{ borderLeft: 'black 0.5px solid' }}>
-                            {item.TenKH}
-                        </Col>
-                        
-                        <Col  style={{ borderLeft: 'black 0.5px solid' }}>
-                            {item.TienNo.toLocaleString('vi', { style: 'currency', currency: 'VND' })}
+                        <Col style={{ borderLeft: 'black 0.5px solid' }}>
+                            {item.SoLuotSua}
                         </Col>
 
-                        <Col  style={{ borderLeft: 'black 0.5px solid' }}>
-                            {formatDateToVN(item.NgayNhan)}
+                        <Col style={{ borderLeft: 'black 0.5px solid' }}>
+                            {item.ThanhTien.toLocaleString('vi', { style: 'currency', currency: 'VND' })}
+                        </Col>
+
+                        <Col style={{ borderLeft: 'black 0.5px solid' }}>
+                            {(item.ThanhTien / ReportTotal.TongDoanhThu * 100).toFixed(2)}%
                         </Col>
                     </Row>)}
-
                 </div>
-            </Col>
+            </Col>}
+
         </Container>
     </div>)
 }
