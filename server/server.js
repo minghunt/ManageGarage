@@ -15,7 +15,8 @@ import {
   phieunhapRoutes,
   baocaotonRoutes,
   baocaotonthangRoutes,
-  revenueReportRoutes
+  revenueReportRoutes,
+  tiencong_phutungRoutes
 } from "./routes/index.js";
 
 const start = async () => {
@@ -31,6 +32,7 @@ const start = async () => {
   app.use("/api/para", paraRoutes);
   app.use("/api/tiencong", tiencongRoutes);
   app.use("/api/phutung", phutungRoutes);
+  app.use("/api/tiencong-phutung", tiencong_phutungRoutes);
   app.use("/api/users", usersRoutes);
   app.use("/api", loginRoutes);
   app.use("/api/car", carRoutes);

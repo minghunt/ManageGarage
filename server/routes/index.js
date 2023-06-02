@@ -11,6 +11,7 @@ export { default as phieunhapRoutes } from './phieunhapRoutes.js';
 export { default as baocaotonthangRoutes } from './baocaotonthangRoutes.js';
 export { default as baocaotonRoutes } from './baocaotonRoutes.js';
 export { default as revenueReportRoutes } from './revenueReportRoutes.js';
+export { default as tiencong_phutungRoutes } from './tiencong_phutungRoutes.js';
 
 
 

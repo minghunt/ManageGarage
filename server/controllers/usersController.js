@@ -133,31 +133,32 @@ const changePassword = async (req, res) => {
   try {
     const emailR = req.params.email;
     console.log("Email đổi mk: ", emailR);
-    const oldPasswordR = req.body.oldPassword;
-    console.log("Mật khẩu cũ nhập vào: ", oldPasswordR);
+    const currentPasswordR = req.body.currentPassword;
+    console.log("Mật khẩu hiện tại nhập vào: ", currentPasswordR);
     const newPasswordR = req.body.newPassword;
     console.log("Mật khẩu mới nhập vào: ", newPasswordR);
     const existingUser = await userModel.findOne({ email: { $eq: emailR } });
     console.log("Tồn tại user?: ", existingUser ? true : false);
+    console.log("existingUser.password: ", existingUser.password);
 
     if (!existingUser) {
       res.status(404).json({ error: "Tài khoản không tồn tại" });
       console.log("Tài khoản không tồn tại");
-    }
-
-    const isMatch = bcrypt.compare(oldPasswordR, existingUser.password);
-    console.log("Mật khẩu đúng?: ", isMatch);
-    if (!isMatch) {
-      res.status(401).json({ error: "Mật khẩu cũ không đúng " });
-      console.log("Mật khẩu cũ không đúng ");
     } else {
-      // Đổi mật khẩu và lưu vào cơ sở dữ liệu
-      const hashedPassword = await bcrypt.hash(newPasswordR, 10);
-      existingUser.password = hashedPassword;
-      await existingUser.save();
-      res.status(200).json({ message: "Đổi mật khẩu thành công" });
-      console.log("hashedPassword: ", hashedPassword);
-      console.log("Đổi mật khẩu thành công");
+      const isMatch = await bcrypt.compare(currentPasswordR, existingUser.password);
+      console.log("Mật khẩu đúng?: ", isMatch);
+
+      if (!isMatch) {
+        console.log("Mật khẩu cũ không đúng ");
+        return res.status(401).json({ error: "Mật khẩu cũ không đúng " });
+      } else {
+        const hashedPassword = await bcrypt.hash(newPasswordR, 10);
+        existingUser.password = hashedPassword;
+        await existingUser.save();
+        res.status(200).json({ message: "Đổi mật khẩu thành công" });
+        console.log("hashedPassword: ", hashedPassword);
+        console.log("Đổi mật khẩu thành công");
+      }
     }
   } catch (error) {
     console.log("Lỗi đổi mật khẩu:", error);

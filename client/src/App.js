@@ -4,6 +4,7 @@ import Login from "./components/Login/Login";
 import Task from "./components/Task/Task";
 import Rule from "./components/Rule/Rule";
 import Report from "./components/Report/Report";
+import User from './components/User/User';
 function App() {
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
   const isUserRoleAdmin = useSelector((state) => state.user.isUserRoleAdmin);
@@ -15,6 +16,7 @@ function App() {
         <Route path="/Task" element ={!isLoggedIn ? <Navigate to={'/'} replace /> : <Task/>}/>
         <Route path="/Report" element ={!isLoggedIn ? <Navigate to={'/'} replace /> : <Report />} />
         <Route path="/Rule" element ={(!isLoggedIn || !isUserRoleAdmin ) ? <Navigate to={'/'} replace /> : <Rule />} />
+        <Route path="/user" element ={!isLoggedIn ? <Navigate to={'/'} replace /> : <User />} />
 
       </Routes>
     </div>
