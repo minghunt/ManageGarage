@@ -1,14 +1,22 @@
 import cron from 'node-cron';
 import baoCaoTonModel from '../models/baocaotonModel.js';
 import baocaotonthangModel from '../models/baocaotonthangModel.js';
-import phutungModel from '../models/phutungModel.js';
+import ct_phieusuachuaModel from '../models/CT_phieusuachuaModel.js';
 import CT_phieunhapModel from '../models/CT_phieunhapModel.js';
 
 
-// Xử lý logic và lưu dữ liệu sau mỗi phút
-cron.schedule('* * * * *', async() => {
+// Xử lý logic và lưu dữ liệu sau mỗi tháng
+cron.schedule('0 0 1 * *', async() => {
   const currentDate = new Date();
   const currentMonth = currentDate.getMonth() + 1;// Lấy tháng từ 0 đến 11, cộng thêm 1 để chuyển sang định dạng từ 1 đến 12
+  let lastMonth
+  if ( (currentMonth -1) === 0)
+  {
+    lastMonth = 12;
+  }
+  else{
+    lastMonth = currentMonth;
+  }
   const currentYear = currentDate.getFullYear();
 
   const ct_phieunhap = await CT_phieunhapModel.aggregate([
@@ -50,20 +58,74 @@ cron.schedule('* * * * *', async() => {
         }
        }
   ]);
-  // console.log(ct_phieunhap);
-  ct_phieunhap.map((item)=>{
+  console.log(ct_phieunhap);
+  const ct_phieusuachua = await ct_phieusuachuaModel.aggregate([
+    {
+      $lookup: {
+        from: "tiencong_phutungs",
+        localField: "MaTienCong",
+        foreignField: "MaTienCong",
+        as: "TienCong"
+      }
+    },
+    {
+      $lookup: {
+        from: "phieusuachuas",
+        localField: "MaPSC",
+        foreignField: "MaPSC",
+        as: "PhieuSuaChua"
+      }
+    },
+    {
+      $unwind: "$TienCong"
+    },
+    {
+      $unwind: "$PhieuSuaChua"
+    },
+    {
+      $match: {
+        $expr: {
+          $and: [
+            { $eq: [{ $year: "PhieuSuaChua.NgaySC" }, currentYear] },
+            { $eq: [{ $month: "PhieuSuaChua.NgaySC" }, lastMonth] }
+          ]
+        }
+      }
+    },
+    {
+      $group: { 
+        _id: '$TienCong.MaPhuTung', SLSuaChua: { $sum: "$TienCong.SoLuong" }, NgaySC: { $first: '$PhieuSuaChua.NgaySC' }
+      } 
+    },
+    {
+      $project: {
+        _id: 0,
+        MaPhuTung:"$_id",
+        SLSuaChua:1,
+        NgaySC:1,
+      }
+     }
+  ]);
+  console.log(ct_phieusuachua)
+  for (const item of ct_phieunhap) 
+  {
+    const phutung = ct_phieusuachua.find((item1)=>item1.MaPhuTung=== item.MaPhuTung)
     const data = {
       Thang: currentMonth,
       Nam: currentYear,
       TonDau:item.SoLuongTon,
-      TonCuoi:(item.SoLuongTon+item.SoLuongTon),
       PhatSinh:item.SLNhapTrongThang,
+      TonCuoi:(item.SoLuongTon+item.SLNhapTrongThang-phutung.SLSuaChua)
     };
-  })
-  // Lưu dữ liệu vào cơ sở dữ liệu
-  // const newBCT = new baocaotonthangModel(data);
-  // newBCT.save()
-
+    const baocaotonthang = new baocaotonthangModel(data);
+    const savedReportMonth = await baocaotonthang.save();
+    const databaocaoton = {
+      MaPhuTung: item.MaPhuTung,
+      MaBaoCaoTonThang: savedReportMonth.MaBaoCaoTonThang
+    }
+    const baocaoton = new baoCaoTonModel(databaocaoton)
+    const savedReport = await baocaoton.save()
+  }
 });
 // Create a new car
 const createReport = async (Data) => {

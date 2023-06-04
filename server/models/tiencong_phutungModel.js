@@ -8,6 +8,10 @@ const tiencongPhuTungSchema = new mongoose.Schema({
   MaPhuTung: {
     type: mongoose.Schema.Types.Number,
     ref: 'phutung',
+  },
+  SoLuong:{
+      type:Number,
+      required: true,
   }
 });
 

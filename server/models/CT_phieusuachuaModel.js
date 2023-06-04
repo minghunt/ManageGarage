@@ -19,6 +19,7 @@ const ct_phieusuachuaSchema = new mongoose.Schema({
     TienCong: {
         type: Number
     }
+
 });
 
 ct_phieusuachuaSchema.pre('save', async function (next) {
