@@ -49,9 +49,7 @@ const Header = () => {
                             <NavDropdown.Item>
                                 <Link className="header-nav-link" to={"/user"}>Hồ sơ</Link>
                             </NavDropdown.Item>
-                            <NavDropdown.Item href="">
-                                Trợ giúp
-                            </NavDropdown.Item>
+                            
                             <NavDropdown.Divider />
                             <NavDropdown.Item onClick={handleLogout}>
                                 Đăng xuất

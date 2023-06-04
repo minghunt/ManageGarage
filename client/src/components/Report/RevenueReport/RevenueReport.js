@@ -78,12 +78,13 @@ export default function RevenueReport() {
         let _Report = Report.map((item, i) => ({
             ...item,
             HieuXe: item.HieuXe.TenHieuXe,
+            ThanhTien:item.ThanhTien.toLocaleString('vi', { style: 'currency', currency: 'VND' }),
             TiLe: (item.ThanhTien / ReportTotal.TongDoanhThu * 100).toFixed(2) + '%'
         }))
         const headers = ['STT', 'Hiệu xe', 'Số lượt sửa', 'Thành tiền', 'Tỉ lệ'];
         const worksheetData = [
             ["", 'Báo cáo doanh thu tháng ' + formatDateToVN(Month)],
-            ["", 'Tổng doanh thu: ' + Number(ReportTotal.TongDoanhThu).toLocaleString('vi', { style: 'currency', currency: 'VND' })],
+            ["", 'Tổng doanh thu: ' + ReportTotal.TongDoanhThu.toLocaleString('vi', { style: 'currency', currency: 'VND' })],
             [""],
             headers,
             ..._Report.map((obj, key) => [key + 1, obj.HieuXe, obj.SoLuotSua, obj.ThanhTien, obj.TiLe]),
@@ -112,7 +113,7 @@ export default function RevenueReport() {
                 <Row className="mb-3">
                     <Form.Group as={Col} md="2" controlId="validationCustom04">
                         <Form.Label>Chọn tháng doanh thu</Form.Label>
-                        <Form.Control type="month" placeholder="Chọn ngày" min="2023-03" max={maxMonth} onChange={handleDateChange} required />
+                        <Form.Control type="month" placeholder="Chọn ngày" min="2023-01" max={maxMonth} onChange={handleDateChange} required />
                         <Form.Control.Feedback type="invalid">
                             Vui lòng chọn tháng báo cáo
                         </Form.Control.Feedback>

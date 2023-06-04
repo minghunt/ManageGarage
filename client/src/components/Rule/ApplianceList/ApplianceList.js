@@ -68,11 +68,11 @@ export default function ApplianceList() {
           }
           setTimeout(() => {
             PhuTungDataService.createPhuTung(item)
-          }, 800 * key);
+          }, 1000 * key);
           setOpenSuccess(true)
           setTimeout(() => {
             window.location.reload()
-          }, data.length * 800);
+          }, data.length * 1000);
         })
       }
     } else setOpenWarn(true)

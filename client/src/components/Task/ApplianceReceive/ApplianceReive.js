@@ -11,8 +11,8 @@ import Button from "react-bootstrap/Button";
 import FormGroup from "react-bootstrap/esm/FormGroup";
 import { MdLibraryAdd, MdDeleteForever } from 'react-icons/md'
 import PhuTungDataService from '../../../services/PhuTungDataService'
-import ParaDataService from '../../../services/ParaDataService'
 import PhieuNhapDataService from "../../../services/PhieuNhapDataService";
+import LinearProgress from '@mui/material/LinearProgress';
 
 const ApplianceReceive = () => {
     const [openEdit, setOpenEdit] = useState(false)
@@ -44,7 +44,7 @@ const ApplianceReceive = () => {
         if ((event.target.value === '-1')) {
             setOpenEdit(true)
             _parts[index].name = "Chọn vật tư";
-            _parts[index].price = 10;
+            _parts[index].price = 0;
             _parts[index].total = 0
             setParts(_parts)
             setReload(!reload)
@@ -124,8 +124,7 @@ const ApplianceReceive = () => {
         PhuTungDataService.getAllPhuTung()
             .then((data) => {
                 setAppliList(data.data)
-                let _AppliList = AppliList;
-                //_AppliList.splice
+               
             })
         
     }, [reload])
@@ -268,7 +267,7 @@ const ApplianceReceive = () => {
                                 Số lượng tồn
                             </Col>
                         </Row>
-                        <div style={{ maxHeight: "500px", overflow: "hidden", overflowY: 'visible', paddingRight: '5px' }}>
+                        {AppliList.length===0?<div><LinearProgress color="success"/></div>:<div style={{ maxHeight: "500px", overflow: "hidden", overflowY: 'visible', paddingRight: '5px' }}>
                             {AppliList.map((item, key) => <Row style={{ textAlign: 'center', padding: '8xp 10px', lineHeight: '27px', borderBottom: 'black 0.5px solid' }}>
                                 <Col xs='1' style={{ borderLeft: 'black 0.5px solid', paddingRight: '5px' }}>
                                     {key + 1}
@@ -282,8 +281,9 @@ const ApplianceReceive = () => {
                                     {item.SoLuongTon}
                                 </Col>
                             </Row>)}
-                        </div>
+                        </div>}
                     </Col>
+                    
                 </Row>
             </Container>
             <Dialog className='Warn'

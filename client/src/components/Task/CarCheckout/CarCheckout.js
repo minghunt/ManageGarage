@@ -14,6 +14,7 @@ import PhieuThuDataService from "../../../services/PhieuThuDataService";
 import ParaDataService from "../../../services/ParaDataService";
 import { format } from 'date-fns';
 import viLocale from 'date-fns/locale/vi';
+
 function formatDateToVN(date) {
     let _date = new Date(date)
     return format(_date, 'dd/MM/yyyy', { locale: viLocale });
@@ -151,22 +152,22 @@ const CarCheckout = () => {
                             <Col xs='1' style={{ paddingRight: '5px' }}>
                                 STT
                             </Col>
-                            <Col xs='1'>
+                            <Col >
                                 Biển số
                             </Col>
-                            <Col xs='2'>
+                            <Col >
                                 Hiệu xe
-                            </Col><Col xs='2'>
+                            </Col><Col >
                                 Tên khách hàng
                             </Col>
-                            <Col xs='2'>
+                            <Col>
                                 Số điện thoại
                             </Col>
 
-                            <Col xs='2'>
+                            <Col >
                                 Tiền nợ
                             </Col>
-                            <Col xs='2'>
+                            <Col >
                                 Ngày nhận
                             </Col>
                         </Row>
@@ -175,22 +176,22 @@ const CarCheckout = () => {
                                 <Col xs='1' style={{ borderLeft: 'black 0.5px solid', paddingRight: '5px' }}>
                                     {key + 1}
                                 </Col>
-                                <Col xs='1' style={{ borderLeft: 'black 0.5px solid' }}>
+                                <Col  style={{ borderLeft: 'black 0.5px solid' }}>
                                     {item.BienSo}
-                                </Col><Col xs='2' style={{ borderLeft: 'black 0.5px solid' }}>
+                                </Col><Col  style={{ borderLeft: 'black 0.5px solid' }}>
                                     {item.HieuXe.TenHieuXe}
                                 </Col>
-                                <Col xs='2' style={{ borderLeft: 'black 0.5px solid' }}>
+                                <Col  style={{ borderLeft: 'black 0.5px solid' }}>
                                     {item.TenKH}
                                 </Col>
-                                <Col xs='2' style={{ borderLeft: 'black 0.5px solid' }}>
+                                <Col  style={{ borderLeft: 'black 0.5px solid' }}>
                                     {item.DienThoai}
                                 </Col>
-                                <Col xs='2' style={{ borderLeft: 'black 0.5px solid' }}>
+                                <Col  style={{ borderLeft: 'black 0.5px solid' }}>
                                     {item.TienNo.toLocaleString('vi', { style: 'currency', currency: 'VND' })}
                                 </Col>
 
-                                <Col xs='2' style={{ borderLeft: 'black 0.5px solid' }}>
+                                <Col style={{ borderLeft: 'black 0.5px solid' }}>
                                     {formatDateToVN(item.NgayNhan)}
                                 </Col>
                             </Row>)}
