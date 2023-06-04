@@ -29,7 +29,7 @@ const CarReceive = () => {
     
     const [BienSo, setBienSo] = useState([])
     const [TenKH, setTenKH] = useState('')
-    const [MaHieuXe, setMaHieuXe] = useState(3)
+    const [MaHieuXe, setMaHieuXe] = useState(1)
     const [NgayNhan, setNgayNhan] = useState(Date)
 
     const [DienThoai, setDienThoai] = useState([])

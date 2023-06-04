@@ -6,18 +6,14 @@ import Form from 'react-bootstrap/esm/Form'
 import Button from "react-bootstrap/Button";
 import { TbReportSearch } from 'react-icons/tb'
 import { TiExport } from 'react-icons/ti'
-
 import RevenueReportDataService from "../../../services/RevenueReportDataService";
 import * as XLSX from 'xlsx';
-
 import { format } from 'date-fns';
 import viLocale from 'date-fns/locale/vi';
-
 function formatDateToVN(date) {
     let _date = new Date(date)
     return format(_date, 'MM/yyyy', { locale: viLocale });
 }
-
 function getMaxMonthValue() {
     // Tạo một đối tượng ngày hiện tại
     const currentDate = new Date();
@@ -94,7 +90,6 @@ export default function RevenueReport() {
         const workbook = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet 1');
         const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-
         saveAsExcelFile(excelBuffer, 'Báo cáo doanh thu tháng ' + formatDateToVN(Month));
     };
     const saveAsExcelFile = (buffer, fileName) => {
