@@ -4,8 +4,8 @@ import carModel from '../models/carModel.js';
 // Create a new car
 const createCar = async (carData) => {
   try {
-        const isCarExist =  await carModel.findOne({ BienSo: carData.BienSo }).exec();
-        carData.TienNo = isCarExist.TienNo;
+
+        let isCarExist =  await carModel.findOne({ BienSo: carData.BienSo });
         if (isCarExist) {
           const updatedCar = await carModel.findOneAndUpdate({_id:isCarExist._id},carData);
           return updatedCar;
