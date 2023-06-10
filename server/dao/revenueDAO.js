@@ -15,7 +15,7 @@ const getrevenueReport = async (revenueReportData) => {
     try {
         const startDate = revenueReportData.Thang + '-01'
         const endDate = revenueReportData.Thang + '-31'
-
+        console.log('ngafy',startDate,endDate)
         const savedrevenueReport = await revenueReport.find()
         let check = true;
         let RevenueReport = {};
@@ -56,9 +56,15 @@ const getrevenueReport = async (revenueReportData) => {
                     }
                 },
                 {
+                    $unwind:"$phieuSuaChua",
+                    $unwind:"$phieuThu"
+                }
+                ,
+                {
                     $match: {
                         $and: [
-                            { "phieuThu.NgayThu": { $gte: new Date(startDate), $lte: new Date(endDate) } }
+                            { "phieuSuaChua.NgaySC": { $gte: new Date(startDate), $lte: new Date(endDate) } },
+                            { "phieuThu.NgayThu": { $gte: new Date(startDate), $lte: new Date(endDate) } },
                         ]
                     }
                 },
@@ -66,7 +72,7 @@ const getrevenueReport = async (revenueReportData) => {
                     $group: {
                         _id: "$MaHieuXe",
                         TenHieuXe: { $first: "$TenHieuXe" },
-                        SoLuotSua: { $sum: { $size: "$phieuSuaChua" } },
+                        SoLuotSua: { $sum: 1 },
                         ThanhTien: { $sum: { $sum: "$phieuThu.SoTienThu" } }
                     }
                 }

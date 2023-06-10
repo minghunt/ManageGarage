@@ -226,7 +226,7 @@ const CarCheckout = () => {
                 open={openSuccess}
             >
                 <DialogTitle >
-                    {"Nhập vật tư thành công! Vui lòng chờ xử lý."}
+                    {"Lập phiếu thu thành công! Vui lòng chờ xử lý."}
                 </DialogTitle>
                 <DialogActions>
                 </DialogActions>

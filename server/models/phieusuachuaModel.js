@@ -5,9 +5,12 @@ const phieusuachuaSchema = new mongoose.Schema({
         type: Number,
         unique: true,
     },
+    MaXe:{
+        type:Number
+    }
+    ,
     BienSo: {
-        type: String,
-        ref: 'xe'
+        type: String
     },
     NgaySC: {
         type: Date

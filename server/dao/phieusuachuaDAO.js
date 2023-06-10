@@ -8,7 +8,7 @@ const createPSC = async (pscData) => {
     try {
         // Tạo phiếu sửa chữa
         let _phieusuachua = {
-            BienSo: pscData.BienSo,
+            MaXe: pscData.MaXe,
             NgaySC: pscData.NgaySC,
             TongTien: pscData.TongTien
         }

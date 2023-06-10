@@ -3,6 +3,7 @@ import { Form, Button, Row, Col, Container } from 'react-bootstrap';
 import { Dialog, DialogActions, DialogTitle } from '@mui/material';
 import PhuTungDataService from '../../../services/PhuTungDataService';
 import TienCongDataService from '../../../services/TienCongDataService';
+import CarDataService from '../../../services/CarDataService';
 import PscDataService from '../../../services/PscDataService';
 import FullPageLoader from '../../FullPageLoader/FullPageLoader';
 import { MdLibraryAdd, MdDeleteForever } from 'react-icons/md'
@@ -19,7 +20,7 @@ const RepairForm = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [openEdit, setOpenEdit] = useState(false)
     const [openSuccess, setOpenSuccess] = useState(false);
-
+    const [openWarnBienSo, setopenWarnBienSo] = useState(false);
     const handleInputChange = (index, event) => {
         const { name, value } = event.target;
         const updatedParts = [...parts];
@@ -158,62 +159,64 @@ const RepairForm = () => {
         setTotalAmount(totalPrice);
     }, [parts, labors, reload]);
     
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
         const form = event.currentTarget;
         if (form.checkValidity() === false) {
             event.stopPropagation();
         } 
         else {
-            setIsLoading(true);
-
+            let check=true
             const licensePlate = event.target.elements.licensePlate.value;
-            const repairDate = event.target.elements.repairDate.value;
-            const totalPrice = totalAmount;
-         
-            const dsPhuTung = parts.map((part) => {
-                return {
-                    MaPhuTung: part.MaPhuTung,
-                    SoLuong: part.quantity,
-                    ThanhTien: part.total,
-                };
-            });
-            const dsNoiDung = labors.map((labor) => {
-                return {
-                    MaTienCong: labor.MaTienCong,
-                    MoTa: labor.nameLabor,
-                    dsPhuTung: dsPhuTung
-                };
-            });
-
-            const phieusuachua = {
-                BienSo: licensePlate,
-                NgaySC: repairDate,
-                TongTien: totalPrice,
-                dsNoiDung: labors,
-                dsPhuTung: parts
-
-            };
-            console.log("phieusuachua: ", phieusuachua);
-            PscDataService.postPSC(phieusuachua)
-            .then((response) => {
-                if(response.status === 200) {
-                    setIsLoading(false);
-                    setOpenSuccess(true);
-                    setTimeout(() => {
-                        window.location.reload();
-                    }, 1000);
-                    console.log("Tạo phiếu sửa chữa thành công");
+            CarDataService.getCarByBienSo(licensePlate)
+            .then(
+                (data)=>{
+                    console.log(data.data)
+                    if (data.data.length===0)
+                {
+                    setopenWarnBienSo(true)
+  
+                }else {
+                    setIsLoading(true);
+           
+                    const repairDate = event.target.elements.repairDate.value;
+                    const totalPrice = totalAmount;
+                    
+                    const phieusuachua = {
+                        MaXe:data.data[0].MaXe,
+                        NgaySC: repairDate,
+                        TongTien: totalPrice,
+                        dsNoiDung: labors,
+                        dsPhuTung: parts
+                    };
+                    console.log("phieusuachua: ", phieusuachua);
+                    PscDataService.postPSC(phieusuachua)
+                    .then((response) => {
+                        if(response.status === 200) {
+                            setIsLoading(false);
+                            setOpenSuccess(true);
+                            setTimeout(() => {
+                                //window.location.reload();
+                            }, 1000);
+                            console.log("Tạo phiếu sửa chữa thành công");
+                        }
+                        else {
+                            setIsLoading(false);
+                            console.log("Tạo phiếu sửa chữa thất bại");
+                        }
+                    }) 
+                    .catch((err) => {
+                        setIsLoading(false);
+                        console.log("Lỗi: ", err);
+                    }) 
                 }
-                else {
-                    setIsLoading(false);
-                    console.log("Tạo phiếu sửa chữa thất bại");
+
+
+           
                 }
-            }) 
-            .catch((err) => {
-                setIsLoading(false);
-                console.log("Lỗi: ", err);
-            }) 
+                
+            )
+            
         }
         setValidated(true);
     };
@@ -263,7 +266,7 @@ const RepairForm = () => {
                             </Row>
                             {labors.map((labor, index) => (<>
                             <Row style={{padding:"4px 0"}}>
-                                {labor.name === 'Chọn tiền công' ?
+                                {labor.nameLabor === 'Chọn tiền công' ?
                                 <Col md={5}>
                                     <Form.Control
                                         value={labor.nameLabor}
@@ -294,13 +297,12 @@ const RepairForm = () => {
                                     </Form.Control>
                                 </Col>
                                 }
-                                {labor.name === 'Chọn tiền công' ?
+                                {labor.nameLabor === 'Chọn tiền công' ?
                                 <Col md={4}>
                                     <Form.Control
                                         type="number"
                                         name="priceLabor"
-                                        min = "0"
-                                        max = "0"
+                                        min = "1"
                                         placeholder="Giá"
                                         value={0}
                                         required
@@ -467,7 +469,14 @@ const RepairForm = () => {
             <Button style={{ backgroundColor: '#0c828f', border: 'none' }} onClick={handleCloseEdit}>OK</Button>
         </DialogActions>
     </Dialog>
-
+        <Dialog className='WarnBienSo' open={openWarnBienSo} >
+        <DialogTitle >
+            {"Vui lòng nhập đúng biển số!"}
+        </DialogTitle>
+        <DialogActions>
+            <Button style={{ backgroundColor: '#0c828f', border: 'none' }} onClick={()=>setopenWarnBienSo(false)}>OK</Button>
+        </DialogActions>
+    </Dialog>
     <Dialog className='Success' open={openSuccess} onClose={handleCloseSuccess}>
         <DialogTitle >
             {"Tạo phiếu sửa chữa thành công! Vui lòng chờ xử lý."}
