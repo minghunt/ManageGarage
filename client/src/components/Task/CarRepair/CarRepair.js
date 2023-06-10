@@ -200,9 +200,9 @@ const RepairForm = () => {
                 if(response.status === 200) {
                     setIsLoading(false);
                     setOpenSuccess(true);
-                    // setTimeout(() => {
-                    //     window.location.reload();
-                    // }, 1000);
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
                     console.log("Tạo phiếu sửa chữa thành công");
                 }
                 else {
@@ -246,7 +246,7 @@ const RepairForm = () => {
                         <Form.Group as={Col} md={5} controlId="labors">
                             <Form.Label column>Tiền công:</Form.Label>
                             <Button variant="primary" 
-                                style={{padding:"4px 8px", marginLeft:"12px"}} 
+                                style={{padding:"4px 8px", marginLeft:"12px", backgroundColor: '#0c828f', border: 'none'}} 
                                 onClick={handleAddLabor}>
                                     Thêm tiền công
                             </Button>
@@ -327,7 +327,7 @@ const RepairForm = () => {
                         <Form.Group controlId="parts" as={Col}>
                             <Form.Label>Vật tư phụ tùng:</Form.Label>
                             <Button variant="primary" 
-                                style={{padding:"4px 8px", marginLeft:"12px"}} 
+                                style={{padding:"4px 8px", marginLeft:"12px",backgroundColor: '#0c828f', border: 'none' }} 
                                 onClick={handleAddPart}>
                                     Thêm vật tư phụ tùng
                             </Button>
@@ -454,7 +454,7 @@ const RepairForm = () => {
                     />
                 </Form.Group>
 
-                <Button type="submit" style={{width:"100px"}}>Tạo</Button>
+                <Button type="submit" style={{width:"100px", backgroundColor: '#0c828f', border: 'none'}}>Tạo</Button>
             </Form>
         </Row>
     </Container>
@@ -470,7 +470,7 @@ const RepairForm = () => {
 
     <Dialog className='Success' open={openSuccess} onClose={handleCloseSuccess}>
         <DialogTitle >
-            {"Nhập vật tư thành công! Vui lòng chờ xử lý."}
+            {"Tạo phiếu sửa chữa thành công! Vui lòng chờ xử lý."}
         </DialogTitle>
         <DialogActions>
             <Button style={{ backgroundColor: '#0c828f', border: 'none' }} onClick={handleCloseSuccess}>OK</Button>

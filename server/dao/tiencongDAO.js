@@ -15,7 +15,6 @@ const createTienCong = async (tiencongData) => {
 const getAllTienCong = async () => {
   try {
     const TienCongs = await tiencongModel.find();
-    console.log("DAO. tiencong: ", TienCongs);
     return TienCongs;
   } catch (error) {
     throw error;
