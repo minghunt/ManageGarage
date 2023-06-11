@@ -60,7 +60,7 @@ const CarCheckout = () => {
                 setOpenWarnTienThu(true)
                 return
             }
-            setOpenSuccess(true)
+            //setOpenSuccess(true)
              setTimeout(() => {
                  window.location.reload()
              }, 700);
@@ -123,7 +123,7 @@ const CarCheckout = () => {
                                     <Form.Label>Số tiền thu:</Form.Label>
                                     <Form.Control type="number" min="10000" step="500" placeholder="Nhập số tiền" onChange={handleTienThuChange} required />
                                     <Form.Control.Feedback type="invalid">
-                                        Vui lòng nhận số tiền thu
+                                        Vui lòng nhập số tiền thu
                                     </Form.Control.Feedback>
                                 </Form.Group>
                                 <Form.Group as={Col} xs='2' className="mb-3" controlId="validationCustom04">

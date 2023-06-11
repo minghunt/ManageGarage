@@ -9,9 +9,6 @@ const phieusuachuaSchema = new mongoose.Schema({
         type:Number
     }
     ,
-    BienSo: {
-        type: String
-    },
     NgaySC: {
         type: Date
     },

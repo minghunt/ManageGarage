@@ -93,7 +93,7 @@ const CarReceive = () => {
             setOpenSuccess(true)
             setTimeout(() => {
                 window.location.reload()
-            }, 500000);
+            }, 1500);
         }
         setValidated(true);
     };

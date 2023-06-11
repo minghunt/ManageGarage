@@ -61,7 +61,7 @@ export default function RevenueReport() {
             }
             RevenueReportDataService.getRevenueReport(a)
                 .then((data) => {
-                    setReport(data.data.resCT_DoanhThuThang)
+                    setReport(data.data.resCT_DoanhThuThang.sort((a, b) => b.ThanhTien - a.ThanhTien))
                     setReportTotal(data.data.RevenueReport)
                 })
             event.preventDefault();

@@ -15,7 +15,8 @@ const createPSC = async (pscData) => {
         const newPsc = new phieusuachuaModel(_phieusuachua);
         const savedPsc = await newPsc.save();
         //Cap nhat tien no
-        let r=await carModal.findOneAndUpdate({BienSo:pscData.BienSo},{ $inc: {TienNo:_phieusuachua.TongTien}})
+        let r=await carModal.findOneAndUpdate({MaXe:pscData.MaXe},{ $inc: {TienNo:_phieusuachua.TongTien}})
+        console.log(pscData)
         //Cap nhat so luong
         pscData.dsPhuTung.map(async (item)=>{
             let quantity=-Number(item.quantity)
