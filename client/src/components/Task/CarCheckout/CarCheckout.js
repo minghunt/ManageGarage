@@ -148,7 +148,7 @@ const CarCheckout = () => {
                         <h2>
                             Thông tin xe
                         </h2>
-                        <Row style={{ textAlign: 'center', paddingBottom: '10px', fontWeight: '700', paddingRight: '6px' }}>
+                        <Row style={{ textAlign: 'center', paddingBottom: '10px', fontWeight: '700', paddingRight: '25px' }}>
                             <Col xs='1' style={{ paddingRight: '5px' }}>
                                 STT
                             </Col>
