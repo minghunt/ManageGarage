@@ -137,7 +137,7 @@ const UserPassword=()=>{
 
                     <Row>
                         <Col>
-                            <Button type="submit">Đổi mật khẩu</Button>
+                            <Button type="submit" style={{backgroundColor: '#0c828f', border: 'none'}}>Đổi mật khẩu</Button>
                         </Col>
                     </Row>
                 </Form>
