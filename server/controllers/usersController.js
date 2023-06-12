@@ -53,7 +53,7 @@ const createUser = async (req, res) => {
   try {
     const emailR = req.body.email;
     const passwordR = req.body.password;
-    const nameR = req.body.fullName;
+    const nameR = req.body.userName;
     const phoneNumberR = req.body.phoneNumber;
     const role = req.body.userRole;
     const currentTime = new Date();
@@ -83,7 +83,7 @@ const createUser = async (req, res) => {
       refreshToken: refreshToken,
     });
     await newUser.save();
-    res.status(201).json({ message: "Người dùng đã được tạo" });
+    res.status(201).json({ message: "Người dùng được tạo thành công" });
     console.log("Tạo người dùng mới thành công");
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -94,9 +94,9 @@ const createUser = async (req, res) => {
 const updateUser = async (req, res) => {
   try {
     const userEmail = req.params.email;
-    console.log(userEmail);
+    console.log("userEmail: ",userEmail);
     const updatedUser = req.body;
-    console.log(updatedUser);
+    console.log("updatedUser: ", updatedUser);
     const result = await userModel.updateOne(
       { email: userEmail },
       {
@@ -106,21 +106,23 @@ const updateUser = async (req, res) => {
         userRole: updatedUser.userRole,
       }
     );
-    console.log(result);
+    console.log("result: ", result);
     if (!result) {
       return res.status(404).json({ message: "Không tìm thấy người dùng" });
+    } else {
+      res.status(200).json({ message: "Cập nhật thành công" });
     }
-    res.status(200).json({ message: "Cập nhật thành công" });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error: "Lỗi cập nhật!" });
   }
 };
 
 // Controller function to delete a user by ID
 const deleteUser = async (req, res) => {
   try {
-    const userId = req.params.id;
-    const result = await usersDAO.deleteUser(userId);
+    const userEmail = req.params.email;
+    console.log("userEmail: ", userEmail);
+    const result = await usersDAO.deleteUser(userEmail);
     if (!result) {
       return res.status(404).json({ message: "User not found" });
     }

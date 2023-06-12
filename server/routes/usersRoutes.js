@@ -21,7 +21,7 @@ router.put('/:email', usersController.updateUser);
 router.put('/:email/change-password', usersController.changePassword);
 
 // Route to delete a user by ID
-router.delete('/:id', usersController.deleteUser);
+router.delete('/:email', usersController.deleteUser);
 
 export default router;
 
