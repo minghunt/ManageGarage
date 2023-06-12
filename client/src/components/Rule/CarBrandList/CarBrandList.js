@@ -12,11 +12,13 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import './CarBrandList.css'
 import CarBrandDataService from '../../../services/CarBrandDataService';
+import CarDataService from '../../../services/CarDataService';
 export default function CarBrandList() {
   const [reload,setReload] = useState(false)
 
   const [HxeList,setHxeList] = useState([])
   const [openWarn, setOpenWarn] = React.useState(false);
+  const [openWarnDetele, setOpenWarnDetele] = React.useState(false);
   const handleCloseWarn = () => {
     setOpenWarn(false);
   };
@@ -93,8 +95,21 @@ export default function CarBrandList() {
     console.log(tenHxeNew)
   }
   //Xoa hieu xe
-  const handleClickOpenDelete = () => {
-    setOpenDelete(true);
+  const handleClickOpenDelete = (hxe) => {
+    let check=true
+    CarDataService.getAllCar()
+    .then(data=>{
+      data.data.map(item=>{
+        if (item.MaHieuXe===hxe.MaHieuXe){
+          check=false
+          setOpenWarnDetele(true)
+          return
+        }
+      })
+      if (check)
+        setOpenDelete(true);
+     
+    })
   };
   const handleCloseDelete = () => {
     setOpenDelete(false);
@@ -135,7 +150,7 @@ export default function CarBrandList() {
             <BiEdit className='CarBrand-edit-btn' style={{ width: '25px', height: '25px' }} onClick={() => { handleClickOpenEdit(); setHxeOnEdit(item);setTenHxeNew(HxeOnEdit.TenHieuXe) }} />
           </Col>
           <Col xs='3' style={{borderLeft: 'black 0.5px solid' }}>
-            <MdDeleteForever className='CarBrand-detele-btn' style={{ width: '25px', height: '25px' }} onClick={()=>{handleClickOpenDelete();setHxeOnEdit(item)}} />
+            <MdDeleteForever className='CarBrand-detele-btn' style={{ width: '25px', height: '25px' }} onClick={()=>{setHxeOnEdit(item);handleClickOpenDelete(item);}} />
           </Col>
         </Row>)}
         </div>
@@ -216,6 +231,16 @@ export default function CarBrandList() {
         </DialogTitle>
         <DialogActions>
           <Button  onClick={handleCloseWarn}>OK</Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog className='Cảnh báo xóa'
+        open={openWarnDetele}
+      >
+        <DialogTitle >
+          {"Hiệu xe này đang được sử dụng!"}
+        </DialogTitle>
+        <DialogActions>
+          <Button  onClick={()=>setOpenWarnDetele(false)}>OK</Button>
         </DialogActions>
       </Dialog>
     </div>

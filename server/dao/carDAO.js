@@ -7,7 +7,7 @@ const createCar = async (carData) => {
 
         let isCarExist =  await carModel.findOne({ BienSo: carData.BienSo });
         if (isCarExist) {
-          const updatedCar = await carModel.findOneAndUpdate({_id:isCarExist._id},carData);
+          const updatedCar = await carModel.findOneAndUpdate({_id:isCarExist._id},{NgayNhan:carData.NgayNhan});
           return updatedCar;
         }
         else{

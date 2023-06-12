@@ -15,6 +15,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import './WageList.css'
 import TienCongDataService from '../../../services/TienCongDataService';
+import PscDataService from '../../../services/PscDataService';
 import * as XLSX from 'xlsx'
 export default function WageList(props) {
   const [data, setData] = React.useState(null);
@@ -23,6 +24,7 @@ export default function WageList(props) {
   const [openSuccess, setOpenSuccess] = React.useState(false);
   const [WageList, setWageList] = React.useState([]);
   const [openAddFile, setOpenAddFile] = React.useState(false);
+  const [openWarnDetele, setOpenWarnDetele] = React.useState(false);
 
   const [openAdd, setOpenAdd] = React.useState(false);
 
@@ -126,8 +128,21 @@ export default function WageList(props) {
     }
   }
   //Xoa
-  const handleClickOpenDelete = () => {
-    setOpenDelete(true);
+  const handleClickOpenDelete = (tiencong) => {
+    let check=true
+    PscDataService.getctPSC()
+      .then(data=>{
+        data.data.map(item=>{
+          if (item.MaTienCong===tiencong.MaTienCong){
+            check=false
+            setOpenWarnDetele(true)
+            return
+          }
+        })
+        if (check)
+          setOpenDelete(true);
+       
+      })
   };
 
   const handleCloseDelete = () => {
@@ -161,7 +176,7 @@ export default function WageList(props) {
   return (
     <div className='CarBrandList-container'>
       <Container style={{ width: '100%' }}>
-        <Row style={{ textAlign: 'center', paddingBottom: '10px', fontWeight: '700', paddingRight: '26px' }}>
+        <Row style={{ textAlign: 'center', paddingBottom: '10px', fontWeight: '700', paddingRight: '22px' }}>
           <Col xs='1' style={{ paddingRight: '5px' }}>
             STT
           </Col>
@@ -192,7 +207,7 @@ export default function WageList(props) {
               <BiEdit className='CarBrand-edit-btn' style={{ width: '25px', height: '25px' }} onClick={() => { handleClickOpenEdit(); setTCOnEdit(item); setTenTC(item.MoTa); setGiaTC(item.TienCong) }} />
             </Col>
             <Col xs='1' style={{ borderLeft: 'black 0.5px solid' }}>
-              <MdDeleteForever className='CarBrand-detele-btn' style={{ width: '25px', height: '25px' }} onClick={() => { handleClickOpenDelete(); setTCOnEdit(item); }} />
+              <MdDeleteForever className='CarBrand-detele-btn' style={{ width: '25px', height: '25px' }} onClick={() => { handleClickOpenDelete(item); setTCOnEdit(item); }} />
             </Col>
           </Row>)}
         </div>
@@ -339,6 +354,16 @@ export default function WageList(props) {
           {"Nhập tiền công thành công! Vui lòng chờ xử lý."}
         </DialogTitle>
         <DialogActions>
+        </DialogActions>
+      </Dialog>
+      <Dialog className='Cảnh báo xóa'
+        open={openWarnDetele}
+      >
+        <DialogTitle >
+          {"Tiền công này đang được sử dụng!"}
+        </DialogTitle>
+        <DialogActions>
+          <Button  onClick={()=>setOpenWarnDetele(false)}>OK</Button>
         </DialogActions>
       </Dialog>
     </div>
