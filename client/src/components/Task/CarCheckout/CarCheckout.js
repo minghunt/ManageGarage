@@ -14,12 +14,26 @@ import PhieuThuDataService from "../../../services/PhieuThuDataService";
 import ParaDataService from "../../../services/ParaDataService";
 import { format } from 'date-fns';
 import viLocale from 'date-fns/locale/vi';
+import PscDataService from "../../../services/PscDataService";
 
 function formatDateToVN(date) {
     let _date = new Date(date)
     return format(_date, 'dd/MM/yyyy', { locale: viLocale });
 }
+function formatDateToYYYYMMDD(inputdate) {
+    let date=new Date(inputdate)
+    const year = date.getFullYear(); // Lấy năm
+    let month = date.getMonth() + 1; // Lấy tháng (tháng được đếm từ 0)
+    let day = date.getDate(); // Lấy ngày
+  
+    // Đảm bảo rằng tháng và ngày có hai chữ số bằng cách thêm '0' nếu cần thiết
+    month = month < 10 ? '0' + month : month;
+    day = day < 10 ? '0' + day : day;
+  
+    return `${year}-${month}-${day}`;
+  }
 const CarCheckout = () => {
+    const [minDate, setminDate] = useState(Date());
     const [Car, setCar] = useState([])
     const [Para, setPara] = useState({})
 
@@ -75,7 +89,29 @@ const CarCheckout = () => {
         setValidated(true);
     };
     const handleBienSoChange = (e) => {
+        let car={}
         setBienSo(e.target.value)
+        CarDataService.getCarByBienSo(e.target.value)
+        .then(data=>{
+            if(data.data.length===0)
+                return
+        car=data.data[0]
+        })
+        PscDataService.getPSC()
+        .then(data=>{
+            let arr = data.data.filter(item=>item.MaXe===car.MaXe)
+            if (arr.length===0) return;
+                let ngayGanNhat = arr[0].NgaySC; // Giả sử ngày đầu tiên là ngày gần nhất
+                let doiTuongGanNhat = arr[0];
+                console.log('dd',arr)
+                for (let i = 1; i < arr.length; i++) {
+                  if (arr[i].NgaySC > ngayGanNhat) {
+                    ngayGanNhat = arr[i].NgaySC;
+                    doiTuongGanNhat = arr[i];
+                  }
+                }
+        setminDate(ngayGanNhat)
+    })
     }
     const handleTienThuChange = (e) => {
         setTienThu(e.target.value)
@@ -128,7 +164,7 @@ const CarCheckout = () => {
                                 </Form.Group>
                                 <Form.Group as={Col} xs='2' className="mb-3" controlId="validationCustom04">
                                     <Form.Label>Ngày thu tiền</Form.Label>
-                                    <Form.Control type="date" placeholder="Chọn ngày" onChange={handleDateChange} required/>
+                                    <Form.Control type="date" placeholder="Chọn ngày" min={formatDateToYYYYMMDD(minDate)} onChange={handleDateChange} required/>
                                     <Form.Control.Feedback type="invalid">
                                         Vui lòng chọn ngày thu tiền
                                     </Form.Control.Feedback>

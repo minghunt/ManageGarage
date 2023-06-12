@@ -8,11 +8,24 @@ import PscDataService from '../../../services/PscDataService';
 import FullPageLoader from '../../FullPageLoader/FullPageLoader';
 import { MdLibraryAdd, MdDeleteForever } from 'react-icons/md'
 import numeral from 'numeral';
-
+function formatDateToYYYYMMDD(inputdate) {
+    let date=new Date(inputdate)
+    const year = date.getFullYear(); // Lấy năm
+    let month = date.getMonth() + 1; // Lấy tháng (tháng được đếm từ 0)
+    let day = date.getDate(); // Lấy ngày
+  
+    // Đảm bảo rằng tháng và ngày có hai chữ số bằng cách thêm '0' nếu cần thiết
+    month = month < 10 ? '0' + month : month;
+    day = day < 10 ? '0' + day : day;
+  
+    return `${year}-${month}-${day}`;
+  }
 const RepairForm = () => {
     const [parts, setParts] = useState([{ MaVatTu: 0, name: "Chọn vật tư", quantity: 0, price: 0, total: 0 }]);
     const [labors, setLabors] = useState([{ MaTienCong: 0, nameLabor: "Chọn tiền công", priceLabor: 0}]);
     const [listPhuTung, setListPhuTung] = useState([]);
+    const [minDate, setminDate] = useState(Date());
+
     const [listTienCong, setListTienCong] = useState([]);
     const [totalAmount , setTotalAmount] = useState('');
     const [validated, setValidated] = useState(false);
@@ -21,6 +34,13 @@ const RepairForm = () => {
     const [openEdit, setOpenEdit] = useState(false)
     const [openSuccess, setOpenSuccess] = useState(false);
     const [openWarnBienSo, setopenWarnBienSo] = useState(false);
+    const handleChangelicensePlate =(e)=>{ 
+    CarDataService.getCarByBienSo(e.target.value)
+    .then(data=>{
+        if (data.data.length)
+            setminDate(data.data[0].NgayNhan)
+    })
+    }
     const handleInputChange = (index, event) => {
         const { name, value } = event.target;
         const updatedParts = [...parts];
@@ -230,7 +250,7 @@ const RepairForm = () => {
                 <Row style={{marginBottom:"20px"}}>
                     <Form.Group as={Col} controlId="licensePlate">
                         <Form.Label column>Biển số xe:</Form.Label>
-                        <Form.Control type="text" name="licensePlate" required />
+                        <Form.Control type="text" name="licensePlate" onChange={handleChangelicensePlate} required />
                         <Form.Control.Feedback type="invalid">
                             Vui lòng nhập biển số xe
                         </Form.Control.Feedback>
@@ -238,7 +258,7 @@ const RepairForm = () => {
 
                     <Form.Group as={Col} controlId="repairDate">
                         <Form.Label column>Ngày sửa chữa:</Form.Label>
-                        <Form.Control type="date" name="repairDate" required />
+                        <Form.Control type="date" name="repairDate" min={formatDateToYYYYMMDD(minDate)} required />
                         <Form.Control.Feedback type="invalid">
                             Vui lòng chọn ngày tiếp nhận
                         </Form.Control.Feedback>

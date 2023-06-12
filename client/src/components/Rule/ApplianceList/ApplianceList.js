@@ -14,10 +14,14 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import PhuTungDataService from '../../../services/PhuTungDataService';
+import PhieuNhapDataService from '../../../services/PhieuNhapDataService';
+
 import * as XLSX from 'xlsx'
 export default function ApplianceList() {
   const [reload, setReload] = React.useState(false);
   const [openWarn, setOpenWarn] = React.useState(false);
+  const [openWarnDetele, setOpenWarnDetele] = React.useState(false);
+
   const [openSuccess, setOpenSuccess] = React.useState(false);
   const [AppliList, setAppliList] = React.useState([]);
   const [data, setData] = React.useState(null);
@@ -123,8 +127,22 @@ export default function ApplianceList() {
     }
   }
   //Xoa
-  const handleClickOpenDelete = () => {
-    setOpenDelete(true);
+  const handleClickOpenDelete = (phutung) => {
+    let check=true
+    PhieuNhapDataService.getctPhieuNhap()
+      .then(data=>{
+        data.data.map(item=>{
+          if (item.MaPhuTung===phutung.MaPhuTung){
+            check=false
+            console.log(item.MaPhuTung,phutung.MaPhuTung)
+            setOpenWarnDetele(true)
+            return
+          }
+        })
+        if (check)
+          setOpenDelete(true);
+       
+      })
   };
 
   const handleCloseDelete = () => {
@@ -158,7 +176,7 @@ export default function ApplianceList() {
   return (
     <div className='CarBrandList-container'>
       <Container style={{ width: '100%' }}>
-        <Row style={{ textAlign: 'center', paddingBottom: '10px', fontWeight: '700', paddingRight: '26px' }}>
+        <Row style={{ textAlign: 'center', paddingBottom: '10px', fontWeight: '700', paddingRight: '22px' }}>
           <Col xs='1' style={{ paddingRight: '5px' }}>
             STT
           </Col>
@@ -189,7 +207,7 @@ export default function ApplianceList() {
               <BiEdit className='CarBrand-edit-btn' style={{ width: '25px', height: '25px' }} onClick={() => { handleClickOpenEdit(); setAppliOnEdit(item); setTenAppli(item.TenPhuTung); setGiaAppli(item.DonGia) }} />
             </Col>
             <Col xs='1' style={{ borderLeft: 'black 0.5px solid' }}>
-              <MdDeleteForever className='CarBrand-detele-btn' style={{ width: '25px', height: '25px' }} onClick={() => { handleClickOpenDelete(); setAppliOnEdit(item); }} />
+              <MdDeleteForever className='CarBrand-detele-btn' style={{ width: '25px', height: '25px' }} onClick={() => { handleClickOpenDelete(item); setAppliOnEdit(item); }} />
             </Col>
           </Row>)}
         </div>
@@ -338,6 +356,16 @@ export default function ApplianceList() {
           {"Nhập tiền công thành công! Vui lòng chờ xử lý."}
         </DialogTitle>
         <DialogActions>
+        </DialogActions>
+      </Dialog>
+      <Dialog className='Cảnh báo xóa'
+        open={openWarnDetele}
+      >
+        <DialogTitle >
+          {"Phụ tùng này đang được sử dụng!"}
+        </DialogTitle>
+        <DialogActions>
+          <Button  onClick={()=>setOpenWarnDetele(false)}>OK</Button>
         </DialogActions>
       </Dialog>
     </div>
