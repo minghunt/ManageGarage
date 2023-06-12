@@ -36,9 +36,16 @@ const Header = () => {
                         <Nav.Link>
                             <Link className="header-nav-link" to={"/Report"}>Báo cáo</Link>
                         </Nav.Link>
-                        {userRole === "admin" ? (
+                        {userRole === "admin"|| userRole==='manager'? (
                         <Nav.Link>
                             <Link  className="header-nav-link" to={"/Rule"}>Quy định</Link>
+                        </Nav.Link>
+                        ) : (
+                        <></>
+                        )}
+                        {userRole === "admin" ? (
+                        <Nav.Link>
+                            <Link  className="header-nav-link" to={"/ManageUser"}>Quản lý người dùng</Link>
                         </Nav.Link>
                         ) : (
                         <></>

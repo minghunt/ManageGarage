@@ -14,7 +14,16 @@ const createUser = async (userData) => {
 // Get all user
 const getAllUsers = async () => {
   try {
-    const user = await User.find();
+    const user = await User.aggregate([
+      {
+        $project: {
+          password: 0,
+          otpNumber: 0,
+          expiryTime: 0,
+          refreshToken: 0
+        }
+      }
+    ]);
     return user;
   } catch (error) {
     throw error;
@@ -54,9 +63,9 @@ const updateUser = async (userEmail, userData) => {
 };
 
 // Delete a user
-const deleteUser = async (userId) => {
+const deleteUser = async (userEmail) => {
   try {
-    await User.findByIdAndDelete(userId);
+    return await User.deleteOne({email: userEmail});
   } catch (error) {
     throw error;
   }

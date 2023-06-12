@@ -49,6 +49,7 @@ const UserPassword=()=>{
                         console.log("Đổi mật khẩu thành công");
                         setShow(true);
                         setIsLoading(false);
+                        setError("");
                     } else if (response.status === 401) {
                         console.log("Mật khẩu cũ không chính xác");
                         setError('Mật khẩu cũ không chính xác');
@@ -60,10 +61,10 @@ const UserPassword=()=>{
                     }
                 })
                 .catch(err => {
-                    console.error("Lỗi yêu cầu đổi mật khẩu: ",error);
+                    console.error("Lỗi yêu cầu đổi mật khẩu: ",err);
                     setShow(false);
                     setIsLoading(false);
-                    setError("Lỗi yêu cầu đổi mật khẩu");
+                    setError("Mật khẩu cũ không đúng");
                 })
             }
             setValidated(true);
@@ -137,7 +138,7 @@ const UserPassword=()=>{
 
                     <Row>
                         <Col>
-                            <Button type="submit">Đổi mật khẩu</Button>
+                            <Button type="submit" style={{backgroundColor: '#0c828f', border: 'none'}}>Đổi mật khẩu</Button>
                         </Col>
                     </Row>
                 </Form>

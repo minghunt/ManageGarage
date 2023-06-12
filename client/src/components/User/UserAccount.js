@@ -188,7 +188,7 @@ const UserAccount=()=>{
 
                     <Row>
                         <Col>
-                            <Button id="submitButton" className="btn btn-success btn-lg" type="submit" >Lưu</Button>
+                            <Button id="submitButton" className="btn btn-success btn-lg" type="submit" style={{backgroundColor: '#0c828f', border: 'none'}}>Lưu</Button>
                         </Col>
                     </Row>
                 </Form>
