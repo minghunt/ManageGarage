@@ -126,7 +126,7 @@ export default function InventoryReport() {
                 <Row className="mb-3">
                     <Form.Group as={Col} md="2" controlId="validationCustom04">
                         <Form.Label>Chọn tháng báo cáo tồn</Form.Label>
-                        <Form.Control type="month" placeholder="Chọn ngày" min="2023-01" max={maxMonth} onChange={handleDateChange} required />
+                        <Form.Control type="month" placeholder="Chọn ngày" min="2023-02" max={maxMonth} onChange={handleDateChange} required />
                         <Form.Control.Feedback type="invalid">
                             Vui lòng chọn tháng báo cáo
                         </Form.Control.Feedback>

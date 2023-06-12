@@ -158,7 +158,7 @@ export default function ApplianceList() {
   return (
     <div className='CarBrandList-container'>
       <Container style={{ width: '100%' }}>
-        <Row style={{ textAlign: 'center', paddingBottom: '10px', fontWeight: '700', paddingRight: '22px' }}>
+        <Row style={{ textAlign: 'center', paddingBottom: '10px', fontWeight: '700', paddingRight: '26px' }}>
           <Col xs='1' style={{ paddingRight: '5px' }}>
             STT
           </Col>

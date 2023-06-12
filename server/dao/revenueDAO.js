@@ -15,7 +15,7 @@ const getrevenueReport = async (revenueReportData) => {
     try {
         const startDate = revenueReportData.Thang + '-01'
         const endDate = revenueReportData.Thang + '-31'
-
+        console.log('ngafy',startDate,endDate)
         const savedrevenueReport = await revenueReport.find()
         let check = true;
         let RevenueReport = {};
@@ -48,6 +48,8 @@ const getrevenueReport = async (revenueReportData) => {
                     }
                 },
                 {
+                    $unwind:"$phieuSuaChua"},
+                {
                     $lookup: {
                         from: "phieuthus",
                         localField: "xe.MaXe",
@@ -56,9 +58,14 @@ const getrevenueReport = async (revenueReportData) => {
                     }
                 },
                 {
+                    $unwind:"$phieuThu"
+                }
+                ,
+                {
                     $match: {
                         $and: [
-                            { "phieuThu.NgayThu": { $gte: new Date(startDate), $lte: new Date(endDate) } }
+                            { "phieuSuaChua.NgaySC": { $gte: new Date(startDate), $lte: new Date(endDate) } },
+                            { "phieuThu.NgayThu": { $gte: new Date(startDate), $lte: new Date(endDate) } },
                         ]
                     }
                 },
@@ -66,23 +73,28 @@ const getrevenueReport = async (revenueReportData) => {
                     $group: {
                         _id: "$MaHieuXe",
                         TenHieuXe: { $first: "$TenHieuXe" },
-                        SoLuotSua: { $sum: { $size: "$phieuSuaChua" } },
-                        ThanhTien: { $sum: { $sum: "$phieuThu.SoTienThu" } }
+                        SoLuotSua: { $addToSet: "$phieuSuaChua.MaPSC" },
+                        ThanhTienList: { $addToSet: "$phieuThu.SoTienThu"  }
                     }
                 }
             ])
             console.log(CT_DoanhThuThang)
             let SumDoanhThu = 0;
-            CT_DoanhThuThang.map((item) => {
-                SumDoanhThu += item.ThanhTien;
+            CT_DoanhThuThang.map((item,key) => {
+                let sumitem=0
+                item.ThanhTienList.map(i=>{
+                    sumitem+=i;
+                })
+                CT_DoanhThuThang[key].ThanhTien=sumitem
+                SumDoanhThu += sumitem;
             })
+            console.log(CT_DoanhThuThang)
+
             let RPdata = {
                 TongDoanhThu: SumDoanhThu,
                 Thang: revenueReportData.Thang,
             }
-
             const newReport = new revenueReport(RPdata);
-
             RevenueReport = await newReport.save()
             let resCT_DoanhThuThang=[]
             CT_DoanhThuThang.map((item, key) => {
@@ -90,7 +102,7 @@ const getrevenueReport = async (revenueReportData) => {
                     MaDoanhThuThang: RevenueReport.MaDoanhThuThang,
                     HieuXe:{TenHieuXe: item.TenHieuXe},
                     MaHieuXe:item._id,
-                    SoLuotSua: item.SoLuotSua,
+                    SoLuotSua: item.SoLuotSua.length,
                     ThanhTien: item.ThanhTien
                 }
                 resCT_DoanhThuThang.push(ct_doanhthuthang)

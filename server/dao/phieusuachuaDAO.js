@@ -2,26 +2,32 @@ import phieusuachuaModel from '../models/phieusuachuaModel.js';
 import ct_phieusuachuaModel from '../models/CT_phieusuachuaModel.js';
 import ct_phutungPSCModel from '../models/CT_phutungPSCModel.js';
 import tiencong_phutungModel from '../models/tiencong_phutungModel.js';
-
+import carModal from '../models/carModel.js'
+import phutungModal from '../models/phutungModel.js'
 const createPSC = async (pscData) => {
     try {
         // Tạo phiếu sửa chữa
         let _phieusuachua = {
-            BienSo: pscData.BienSo,
+            MaXe: pscData.MaXe,
             NgaySC: pscData.NgaySC,
             TongTien: pscData.TongTien
         }
-        console.log("DAO. _phieusuachua: ", _phieusuachua);
         const newPsc = new phieusuachuaModel(_phieusuachua);
         const savedPsc = await newPsc.save();
-
+        //Cap nhat tien no
+        let r=await carModal.findOneAndUpdate({MaXe:pscData.MaXe},{ $inc: {TienNo:_phieusuachua.TongTien}})
+        console.log(pscData)
+        //Cap nhat so luong
+        pscData.dsPhuTung.map(async (item)=>{
+            let quantity=-Number(item.quantity)
+            await phutungModal.findOneAndUpdate({MaPhuTung:item.MaPhuTung},{ $inc: {SoLuongTon:quantity}})
+        })
         // Tạo ct_phieusuachua tương ứng
         for (const noidung of pscData.dsNoiDung) {
             let _ctPsc =  new ct_phieusuachuaModel({
                 MaPSC: savedPsc.MaPSC,
                 MaTienCong: noidung.MaTienCong,
             });
-            console.log("DAO. _ctPsc: ", _ctPsc);
             const savedCtPsc = await _ctPsc.save();
 
             // Tạo ct_phutungPSC theo ct_phieusuachua (tiencong)
@@ -30,7 +36,6 @@ const createPSC = async (pscData) => {
                     MaTienCong: savedCtPsc.MaTienCong,
                     MaPhuTung: phutung.MaPhuTung
                 })
-                console.log("tiencong_phutung :", tiencong_phutung);
                 if(tiencong_phutung) {
                     let _ctPhuTungPSC = ct_phutungPSCModel({
                         MaCTPSC: savedCtPsc.MaCTPSC,
@@ -38,7 +43,6 @@ const createPSC = async (pscData) => {
                         SoLuong: phutung.quantity,
                         ThanhTien: phutung.total,
                     })
-                    console.log("DAO. _ctPhuTungPSC: ", _ctPhuTungPSC);
                     await _ctPhuTungPSC.save();
                 }
             }

@@ -61,7 +61,7 @@ export default function RevenueReport() {
             }
             RevenueReportDataService.getRevenueReport(a)
                 .then((data) => {
-                    setReport(data.data.resCT_DoanhThuThang)
+                    setReport(data.data.resCT_DoanhThuThang.sort((a, b) => b.ThanhTien - a.ThanhTien))
                     setReportTotal(data.data.RevenueReport)
                 })
             event.preventDefault();
@@ -108,7 +108,7 @@ export default function RevenueReport() {
                 <Row className="mb-3">
                     <Form.Group as={Col} md="2" controlId="validationCustom04">
                         <Form.Label>Chọn tháng doanh thu</Form.Label>
-                        <Form.Control type="month" placeholder="Chọn ngày" min="2023-01" max={maxMonth} onChange={handleDateChange} required />
+                        <Form.Control type="month" placeholder="Chọn ngày" min="2023-02" max={maxMonth} onChange={handleDateChange} required />
                         <Form.Control.Feedback type="invalid">
                             Vui lòng chọn tháng báo cáo
                         </Form.Control.Feedback>

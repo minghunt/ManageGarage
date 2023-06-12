@@ -61,20 +61,6 @@ const deleteUser = async (userId) => {
     throw error;
   }
 };
-const addtopurchasedCourses = async (user_id, items) => {
-  try {
-    const user = await User.findById(user_id);
-    if (!user) {
-      throw new Error("User not found"); // Throw an error if user is null or undefined
-    }
-    for (let i = 0; i < items.length; i++) {
-      user.purchasedCourses.push(items[i].course_id);
-    }
-    user.save();
-  } catch (error) {
-    throw error;
-  }
-};
 
 export {
   createUser,
@@ -83,5 +69,4 @@ export {
   getUserById,
   updateUser,
   deleteUser,
-  addtopurchasedCourses,
 };

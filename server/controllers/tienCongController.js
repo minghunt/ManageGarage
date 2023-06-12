@@ -25,7 +25,6 @@ async function getAllTienCong(req, res) {
   try {
     const TienCong = await tiencongDAO.getAllTienCong();
     // const cars = await carModel.find();
-    console.log("Controller. TienCong: ", TienCong);
     res.status(200).json(TienCong);
   } catch (error) {
     res.status(500).json({ error: error.message });

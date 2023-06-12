@@ -89,10 +89,11 @@ const CarReceive = () => {
                 NgayNhan: NgayNhan
             }
             CarDataService.createCar(_Car)
+            console.log(_Car)
             setOpenSuccess(true)
             setTimeout(() => {
                 window.location.reload()
-            }, 1000);
+            }, 1500);
         }
         setValidated(true);
     };
