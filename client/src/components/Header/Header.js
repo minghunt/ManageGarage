@@ -43,6 +43,13 @@ const Header = () => {
                         ) : (
                         <></>
                         )}
+                        {isUserRoleAdmin ? (
+                        <Nav.Link>
+                            <Link  className="header-nav-link" to={"/ManageUser"}>Quản lý người dùng</Link>
+                        </Nav.Link>
+                        ) : (
+                        <></>
+                        )}
                     </Nav>
                     <Nav>
                         <NavDropdown title="Tài khoản" id="collasible-nav-dropdown">
