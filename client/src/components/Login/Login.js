@@ -70,7 +70,7 @@ const Login = () => {
             if (response.status === 200) {
                 console.log('Đăng nhập thành công:', response.data.message);
                 console.log(response.data);
-                values.userRoleAdmin = response.data.userRoleAdmin;
+                values.userRole = response.data.userRole;
                 const expirationDate = new Date();
                 expirationDate.setTime(expirationDate.getTime() + (10 * 60 * 1000)); // 10 phút
                 Cookies.set('token', response.data.token, { expires: expirationDate });
