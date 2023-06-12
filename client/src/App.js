@@ -8,7 +8,7 @@ import Report from "./components/Report/Report";
 import User from './components/User/User';
 function App() {
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
-  const isUserRoleAdmin = useSelector((state) => state.user.isUserRoleAdmin);
+  const userRole = useSelector((state) => state.user.userRole);
 
   return (
     <div className="App">
@@ -17,7 +17,7 @@ function App() {
         <Route path="/reset-password" element ={isLoggedIn ? <Navigate to={'/Task'} replace /> :<ResetPassword />} />
         <Route path="/Task" element ={!isLoggedIn ? <Navigate to={'/'} replace /> : <Task/>}/>
         <Route path="/Report" element ={!isLoggedIn ? <Navigate to={'/'} replace /> : <Report />} />
-        <Route path="/Rule" element ={(!isLoggedIn || !isUserRoleAdmin ) ? <Navigate to={'/'} replace /> : <Rule />} />
+        <Route path="/Rule" element ={(!isLoggedIn || userRole === "admin" ) ? <Navigate to={'/'} replace /> : <Rule />} />
         <Route path="/user" element ={!isLoggedIn ? <Navigate to={'/'} replace /> : <User />} />
       </Routes>
     </div>
