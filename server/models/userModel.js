@@ -5,25 +5,31 @@ const userSchema = new mongoose.Schema({
     type: String
   },
   date: {
-    type: Date
+    type: Date,
+    default: Date.now,
   },
   avatar: {
     type: String
   },
   name: {
-    type: String
+    type: String,
+    required: true
   },
   email: {
-    type: String
+    type: String,
+    required: true
   },
   phoneNumber: {
-    type: String
+    type: String,
+    required: true
   },
   password: {
-    type: String
+    type: String,
+    required: true
   },
-  userRoleAdmin: {
-    type: Boolean
+  userRole: {
+    type: String,
+    required: true
   },
   otpNumber: {
     type: String

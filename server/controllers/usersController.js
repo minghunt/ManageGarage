@@ -55,7 +55,7 @@ const createUser = async (req, res) => {
     const passwordR = req.body.password;
     const nameR = req.body.fullName;
     const phoneNumberR = req.body.phoneNumber;
-    const role = req.body.userRoleAdmin;
+    const role = req.body.userRole;
     const currentTime = new Date();
     const existingUser = await userModel.findOne({ email: { $eq: emailR } });
   
@@ -78,7 +78,7 @@ const createUser = async (req, res) => {
       password: hashedPassword,
       name: nameR,
       phoneNumber: phoneNumberR,
-      userRoleAdmin: role,
+      userRole: role,
       date: currentTime,
       refreshToken: refreshToken,
     });
@@ -103,6 +103,7 @@ const updateUser = async (req, res) => {
         phoneNumber: updatedUser.phoneNumber,
         name: updatedUser.name,
         gender: updatedUser.gender,
+        userRole: updatedUser.userRole,
       }
     );
     console.log(result);
