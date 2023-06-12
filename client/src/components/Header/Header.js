@@ -43,7 +43,7 @@ const Header = () => {
                         ) : (
                         <></>
                         )}
-                        {isUserRoleAdmin ? (
+                        {userRole ? (
                         <Nav.Link>
                             <Link  className="header-nav-link" to={"/ManageUser"}>Quản lý người dùng</Link>
                         </Nav.Link>
