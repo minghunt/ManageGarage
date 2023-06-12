@@ -14,6 +14,7 @@ import {
   InputLabel,
   OutlinedInput,
   FormControl,
+
 } from "@mui/material";
 import { MdDeleteForever, MdLibraryAdd } from "react-icons/md";
 import { BiEdit } from "react-icons/bi";
@@ -119,6 +120,7 @@ export default function ManageUser() {
         if (response.status === 200) {
           console.log("Cập nhật thành công:", response.data.message);
           setResErr(response.data.message)
+          setOpenEdit(false)
           setOpenWarnCreate(true)
           setTimeout(() => {
             setReload(!reload);
@@ -233,7 +235,7 @@ export default function ManageUser() {
                     {item.name}
                   </Col>
                   <Col xs="2" style={{ borderLeft: "#ccc 1px solid" }}>
-                    {item.userRole}
+                    {item.userRole==='employee'?'Nhân viên':'Quản lý'}
                   </Col>
                   <Col xs="1" style={{ borderLeft: "#ccc 1px solid" }}>
                     <BiEdit
@@ -242,6 +244,9 @@ export default function ManageUser() {
                       onClick={() => {
                         handleClickOpenEdit();
                         setUserOnEdit(item);
+                        setUserRole(item.userRole)
+                        setUserName(item.name)
+                        setPhoneNumber(item.phoneNumber)
                       }}
                     />
                   </Col>
@@ -340,8 +345,8 @@ export default function ManageUser() {
                   onChange={(event) => handleUserRoleChange(event)}
                   required
                 >
-                  <option value="employee" selected>employee</option>
-                  <option value="manager">manager</option>
+                  <option value="employee">Nhân viên</option>
+                    <option value="manager" selected>Quản lý</option>
                 </Form.Control>
                 <FormControl fullWidth style={{marginTop:"12px"}}>
                   <Button type="submit" style={{backgroundColor:"#00bc86", padding:"12px", color:"white"}}>Đăng ký</Button>
@@ -376,6 +381,7 @@ export default function ManageUser() {
                     required
                     type="text"
                     label="Tên"
+                    defaultValue={userOnEdit.name}
                     onChange={handleNameChange}
                   />
                 </FormControl>
@@ -387,13 +393,19 @@ export default function ManageUser() {
                   <OutlinedInput
                     required
                     type="text"
-                    label="Số điện thoại"
+                    defaultValue={userOnEdit.phoneNumber}
+                    label="Số điện thoại" 
                     onChange={handlePhoneNumberChange}
                   />
                 </FormControl>
+                <Form.Group>
+                  <InputLabel style={{fontSize:'13px', marginLeft:'15px',marginTop:'0px'}}>
+                  Chức vụ
+                    <span className="required" style={{color:"red"}}> *</span>
+                  </InputLabel>
                 <Form.Control
                   fullWidth 
-                  style={{marginTop:"8px", padding:"12px"}}
+                  style={{ padding:"12px"}}
                   as="select"
                   name="nameLabor"
                   label="Chức vụ"
@@ -401,13 +413,15 @@ export default function ManageUser() {
                   required
                 >
                   {userOnEdit.userRole === "employee" ? (<>
-                    <option value="employee" selected>employee</option>
-                    <option value="manager">manager</option>
+                    <option value="employee" selected>Nhân viên</option>
+                    <option value="manager">Quản lý</option>
                   </>):(<>
-                    <option value="employee">employee</option>
-                    <option value="manager" selected>manager</option>
+                    <option value="employee">Nhân viên</option>
+                    <option value="manager" selected>Quản lý</option>
                   </>)}
                 </Form.Control>
+                </Form.Group>
+                
                 <FormControl fullWidth style={{marginTop:"12px"}}>
                   <Button type="submit" style={{backgroundColor:"#00bc86", padding:"12px", color:"white"}}>Cập nhật</Button>
                 </FormControl>
