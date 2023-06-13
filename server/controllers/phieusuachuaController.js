@@ -26,6 +26,16 @@ async function getPSC(req,res) {
         res.status(500).json({ messsage:"Lỗi: ", error: error.message });
     }
 }
+async function getPSCbyMaXe(req,res) {
+    try {
+        const MaXeR = req.params.MaXe;
+        console.log("MaXe: ", MaXeR)
+        const Psc =await phieusuachuaModel.find({MaXe: {$eq:MaXeR }})
+        res.status(200).json(Psc);
+    } catch (error) {
+        res.status(500).json({ messsage:"Lỗi: ", error: error.message });
+    }
+}
 export {
-    createPSC,getPSC,getctPSC
+    createPSC,getPSC,getctPSC,getPSCbyMaXe
 };

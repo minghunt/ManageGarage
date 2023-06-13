@@ -34,13 +34,35 @@ const RepairForm = () => {
     const [openEdit, setOpenEdit] = useState(false)
     const [openSuccess, setOpenSuccess] = useState(false);
     const [openWarnBienSo, setopenWarnBienSo] = useState(false);
-    const handleChangelicensePlate =(e)=>{ 
-    CarDataService.getCarByBienSo(e.target.value)
-    .then(data=>{
-        if (data.data.length)
-            setminDate(data.data[0].NgayNhan)
-    })
+
+    const [showHistoryButton, setShowHistoryButton] = useState(false);
+    const [listPSC, setListPSC] = useState([]);
+
+
+    const handleChangelicensePlate = (e) => { 
+        CarDataService.getCarByBienSo(e.target.value)
+        .then(data => {
+            if (data.data.length)
+                setminDate(data.data[0].NgayNhan)
+            if(data.data.length === 1) {
+                console.log("data.data.length: ", data.data.length)
+                console.log("data.data[0].MaXe: ", data.data[0].MaXe)
+                setShowHistoryButton(true)
+                PscDataService.getctPSCbyMaXe(data.data[0].MaXe)
+                .then(response => {
+                    console.log("response.data: ", response.data)
+                    setListPSC(response.data)
+                })
+            } else {
+                setShowHistoryButton(false)
+            }
+        })
     }
+
+    const handleHistory = (event) => {
+        
+    }
+    
     const handleInputChange = (index, event) => {
         const { name, value } = event.target;
         const updatedParts = [...parts];
@@ -250,6 +272,13 @@ const RepairForm = () => {
                 <Row style={{marginBottom:"20px"}}>
                     <Form.Group as={Col} controlId="licensePlate">
                         <Form.Label column>Biển số xe:</Form.Label>
+                        {showHistoryButton && 
+                        <Button variant="primary" 
+                            style={{padding:"4px 8px", marginLeft:"12px", backgroundColor: '#0c828f', border: 'none'}} 
+                            onClick={handleHistory}
+                            >Xem lịch sử
+                        </Button>
+                        }
                         <Form.Control type="text" name="licensePlate" onChange={handleChangelicensePlate} required />
                         <Form.Control.Feedback type="invalid">
                             Vui lòng nhập biển số xe
