@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Button, Row, Col, Container } from 'react-bootstrap';
-import { Dialog, DialogActions, DialogTitle } from '@mui/material';
+import { 
+    Dialog, 
+    DialogActions, 
+    DialogTitle,
+    DialogContent
+} from '@mui/material';
 import PhuTungDataService from '../../../services/PhuTungDataService';
 import TienCongDataService from '../../../services/TienCongDataService';
 import CarDataService from '../../../services/CarDataService';
@@ -37,7 +42,8 @@ const RepairForm = () => {
 
     const [showHistoryButton, setShowHistoryButton] = useState(false);
     const [listPSC, setListPSC] = useState([]);
-
+    const [openHistory, setOpenHistory] = useState(false);
+    let existsPhuTung = [];
 
     const handleChangelicensePlate = (e) => { 
         CarDataService.getCarByBienSo(e.target.value)
@@ -58,11 +64,13 @@ const RepairForm = () => {
             }
         })
     }
-
-    const handleHistory = (event) => {
-        
+    const handleOpenHistory = (event) => {
+        setOpenHistory(true)
     }
-    
+    const handleCloseHistory = (event) => {
+        setOpenHistory(false)
+    }
+
     const handleInputChange = (index, event) => {
         const { name, value } = event.target;
         const updatedParts = [...parts];
@@ -211,54 +219,45 @@ const RepairForm = () => {
             let check=true
             const licensePlate = event.target.elements.licensePlate.value;
             CarDataService.getCarByBienSo(licensePlate)
-            .then(
-                (data)=>{
+            .then((data) => {
                     console.log(data.data)
-                    if (data.data.length===0)
-                {
-                    setopenWarnBienSo(true)
-  
-                }else {
-                    setIsLoading(true);
-           
-                    const repairDate = event.target.elements.repairDate.value;
-                    const totalPrice = totalAmount;
-                    
-                    const phieusuachua = {
-                        MaXe:data.data[0].MaXe,
-                        NgaySC: repairDate,
-                        TongTien: totalPrice,
-                        dsNoiDung: labors,
-                        dsPhuTung: parts
-                    };
-                    console.log("phieusuachua: ", phieusuachua);
-                    PscDataService.postPSC(phieusuachua)
-                    .then((response) => {
-                        if(response.status === 200) {
+                    if (data.data.length===0) {
+                        setopenWarnBienSo(true)
+                    } else {
+                        setIsLoading(true);
+                        const repairDate = event.target.elements.repairDate.value;
+                        const totalPrice = totalAmount;
+                        const phieusuachua = {
+                            MaXe:data.data[0].MaXe,
+                            NgaySC: repairDate,
+                            TongTien: totalPrice,
+                            dsNoiDung: labors,
+                            dsPhuTung: parts
+                        };
+                        console.log("phieusuachua: ", phieusuachua);
+                        PscDataService.postPSC(phieusuachua)
+                        .then((response) => {
+                            if(response.status === 200) {
+                                setIsLoading(false);
+                                setOpenSuccess(true);
+                                setTimeout(() => {
+                                    //window.location.reload();
+                                }, 1000);
+                                console.log("Tạo phiếu sửa chữa thành công");
+                            }
+                            else {
+                                setIsLoading(false);
+                                console.log("Tạo phiếu sửa chữa thất bại");
+                            }
+                        }) 
+                        .catch((err) => {
                             setIsLoading(false);
-                            setOpenSuccess(true);
-                            setTimeout(() => {
-                                //window.location.reload();
-                            }, 1000);
-                            console.log("Tạo phiếu sửa chữa thành công");
-                        }
-                        else {
-                            setIsLoading(false);
-                            console.log("Tạo phiếu sửa chữa thất bại");
-                        }
-                    }) 
-                    .catch((err) => {
-                        setIsLoading(false);
-                        console.log("Lỗi: ", err);
-                    }) 
-                }
-
-
-           
+                            console.log("Lỗi: ", err);
+                        }) 
+                    }
                 }
                 
             )
-            
         }
         setValidated(true);
     };
@@ -275,7 +274,7 @@ const RepairForm = () => {
                         {showHistoryButton && 
                         <Button variant="primary" 
                             style={{padding:"4px 8px", marginLeft:"12px", backgroundColor: '#0c828f', border: 'none'}} 
-                            onClick={handleHistory}
+                            onClick={handleOpenHistory}
                             >Xem lịch sử
                         </Button>
                         }
@@ -509,29 +508,99 @@ const RepairForm = () => {
             </Form>
         </Row>
     </Container>
-
+    
     <Dialog className='Warn' open={openEdit} onClose={handleCloseEdit}>
-        <DialogTitle >
-            {"Loại này đã được chọn!"}
-        </DialogTitle>
+        <DialogTitle >{"Loại này đã được chọn!"}</DialogTitle>
         <DialogActions>
             <Button style={{ backgroundColor: '#0c828f', border: 'none' }} onClick={handleCloseEdit}>OK</Button>
         </DialogActions>
     </Dialog>
-        <Dialog className='WarnBienSo' open={openWarnBienSo} >
-        <DialogTitle >
-            {"Vui lòng nhập đúng biển số!"}
-        </DialogTitle>
+
+    <Dialog className='WarnBienSo' open={openWarnBienSo} >
+        <DialogTitle >{"Vui lòng nhập đúng biển số!"}</DialogTitle>
         <DialogActions>
             <Button style={{ backgroundColor: '#0c828f', border: 'none' }} onClick={()=>setopenWarnBienSo(false)}>OK</Button>
         </DialogActions>
     </Dialog>
+
     <Dialog className='Success' open={openSuccess} onClose={handleCloseSuccess}>
-        <DialogTitle >
-            {"Tạo phiếu sửa chữa thành công! Vui lòng chờ xử lý."}
-        </DialogTitle>
+        <DialogTitle >{"Tạo phiếu sửa chữa thành công! Vui lòng chờ xử lý."}</DialogTitle>
         <DialogActions>
             <Button style={{ backgroundColor: '#0c828f', border: 'none' }} onClick={handleCloseSuccess}>OK</Button>
+        </DialogActions>
+    </Dialog>
+
+    <Dialog className='history' open={openHistory} onClose={handleCloseHistory} style={{ width: '100vw' }}>
+        <DialogTitle style={{fontWeight:"bolder"}}>{"Lịch sử sửa chữa"}</DialogTitle>
+        <DialogContent>
+            <Form.Group controlId="parts">
+                <Row style={{textAlign:"center", fontWeight:"700"}}>
+                    <Col md={2}>Ngày sửa</Col>
+                    <Col>Tiền công</Col>
+                    <Col>Phụ tùng</Col>
+                    <Col md={2}>Thành tiền</Col>
+                </Row>
+                {listPSC.map((item) => (<>
+                    <Row style={{border:"solid 1px #ccc", 
+                                marginBottom:"12px", 
+                                borderRadius:"5px",
+                                textAlign:"center"}}>
+                        <Col md={2}>
+                            <Form.Control
+                                as="text"
+                                placeholder="Ngày sửa"
+                                style={{border:"none"}}
+                                readOnly
+                            >
+                                {formatDateToYYYYMMDD(item.NgaySC)}
+                            </Form.Control>
+                        </Col>
+                        <Col>
+                            <Form.Control
+                                as="text"
+                                name="name"
+                                readOnly
+                                style={{border:"none"}}
+                            >
+                                {item.ctPhieuSuaChua.map(item2 => 
+                                    <div>{item2.tiencong.MoTa}</div>
+                                )}
+                            </Form.Control>
+                        </Col>
+                        <Col>
+                        <Form.Control
+                            as="text"
+                            name="name"
+                            readOnly
+                            style={{ border: "none" }}
+                            >
+                            {item.ctPhutungSuaChua.map((item2) => {
+                                if (existsPhuTung.includes(item2.phutung.TenPhuTung)) {
+                                    return null;
+                                } else {
+                                    existsPhuTung.push(item2.phutung.TenPhuTung);
+                                    return <div>{item2.phutung.TenPhuTung}</div>;
+                                }
+                            })}
+                        </Form.Control>
+
+                        </Col>
+                        <Col md={2}>
+                            <Form.Control
+                                as="text"
+                                placeholder="Thành tiền"
+                                style={{border:"none"}}
+                                readOnly
+                            >
+                                {item.TongTien ? item.TongTien.toLocaleString('vi', { style: 'currency', currency: 'VND' }) : null}
+                            </Form.Control>
+                        </Col>
+                    </Row>
+                    </>))}
+            </Form.Group>
+        </DialogContent>
+        <DialogActions>
+            <Button onClick={handleCloseHistory} style={{backgroundColor:"rgb(12, 130, 143)", border:"none"}}>Đóng</Button>
         </DialogActions>
     </Dialog>
     </>);

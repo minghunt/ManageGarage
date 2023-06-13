@@ -20,3 +20,7 @@
     color: #0c828f;
     cursor: pointer;
 }
+.MuiDialog-paper {
+    max-width: none !important;
+    width: 80%;
+}
