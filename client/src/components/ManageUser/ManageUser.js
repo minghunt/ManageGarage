@@ -342,11 +342,11 @@ export default function ManageUser() {
                   as="select"
                   name="nameLabor"
                   label="Chức vụ"
-                  onChange={(event) => handleUserRoleChange(event)}
+                  onChange={(event) => {handleUserRoleChange(event);setUserRole('employee')}}
                   required
                 >
-                  <option value="employee">Nhân viên</option>
-                    <option value="manager" selected>Quản lý</option>
+                  <option value="employee" selected>Nhân viên</option>
+                    <option value="manager" >Quản lý</option>
                 </Form.Control>
                 <FormControl fullWidth style={{marginTop:"12px"}}>
                   <Button type="submit" style={{backgroundColor:"#00bc86", padding:"12px", color:"white"}}>Đăng ký</Button>

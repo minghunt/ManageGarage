@@ -16,6 +16,10 @@ const getAllUsers = async () => {
   try {
     const user = await User.aggregate([
       {
+        $match:{
+          userRole:{$ne:'admin'}
+        }
+      },{
         $project: {
           password: 0,
           otpNumber: 0,
