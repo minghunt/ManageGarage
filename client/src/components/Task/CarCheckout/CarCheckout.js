@@ -204,7 +204,7 @@ const CarCheckout = () => {
                                 Tiền nợ
                             </Col>
                             <Col >
-                                Ngày nhận
+                                Ngày tiếp nhận
                             </Col>
                         </Row>
                         <div style={{ maxHeight: "500px", overflow: "hidden", overflowY: 'visible', paddingRight: '5px' }}>

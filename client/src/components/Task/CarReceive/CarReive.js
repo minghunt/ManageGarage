@@ -55,12 +55,20 @@ const CarReceive = () => {
 
     }
     const handleDateChange = (e) => {
-        let _date = new Date(e.target.value)
+        console.log(e.target.value)
+        let _date=new Date(e.target.value)
         setNgayNhan(_date)
+        if (e.target.value==='')
+        CarDataService.getAllCar()
+        .then(data=>{
+            setCarList(data.data)
+        })
         CarDataService.getCarByNgayNhan(_date)
                 .then((data)=>{
                     setCarListDate(data.data)
+                    if (e.target.value!=='') setCarList(data.data)
                 })
+        
     }
     const handleCloseWarnMaxCar= ()=>{
         setOpenWarnMaxCar(false)
@@ -208,7 +216,7 @@ const CarReceive = () => {
                                 Ngày nhận
                             </Col>
                         </Row>
-                        <div style={{ maxHeight: "500px", overflow: "hidden", overflowY: 'visible', paddingRight: '5px' }}>
+                        {CarList.length===0?<p>Chưa tìm thấy xe trong ngày đang chọn</p>:<div style={{ maxHeight: "500px", overflow: "hidden", overflowY: 'visible', paddingRight: '5px' }}>
                             {CarList.map((item, key) => <Row style={{ textAlign: 'center', padding: '8xp 10px', lineHeight: '27px', borderBottom: 'black 0.5px solid' }}>
                                 <Col xs='1' style={{ borderLeft: 'black 0.5px solid', paddingRight: '5px' }}>
                                     {key + 1}
@@ -229,7 +237,7 @@ const CarReceive = () => {
 
                                 </Col>
                             </Row>)}
-                        </div>
+                        </div>}
                     </Col>
                 </Row>
             </Container>

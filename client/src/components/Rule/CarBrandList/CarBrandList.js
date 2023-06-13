@@ -47,6 +47,8 @@ export default function CarBrandList() {
 
   };
   const handleCloseAddAndUpdate = () => {
+    console.log("gj",HxeList)
+
     if(tenHxeNew!==''&&tenHxeNew!==null){
     CarBrandDataService.createCarBrand(tenHxeNew)
     setOpenAdd(false);

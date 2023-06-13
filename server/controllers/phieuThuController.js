@@ -1,6 +1,6 @@
 import * as phieuthuDAO from '../dao/phieuthuDAO.js';
 import carBrandModel from "../models/carBrandModel.js";
-
+import phieuthu from '../models/phieuthuModel.js';
 // Create a phieuthu
 async function createphieuthu(req, res) {
   try {
@@ -11,8 +11,15 @@ async function createphieuthu(req, res) {
     res.status(500).json({ error: error.message });
   }
 }
-
+async function getphieuthu(req, res) {
+  try {
+    const getphieuthu = await phieuthu.find()
+    res.status(201).json(getphieuthu);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
 export {
-  createphieuthu,
+  createphieuthu,getphieuthu
 };
 
