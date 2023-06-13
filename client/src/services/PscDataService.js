@@ -11,6 +11,9 @@ class PscDataService {
     getctPSC() {
         return axios.get(`${BASE_URL}/api/phieusuachua/ctPSC`)
     }
+    getctPSCbyMaXe(MaXe) {
+        return axios.get(`${BASE_URL}/api/phieusuachua/${MaXe}`)
+    }
 }
 
 export default new PscDataService();
