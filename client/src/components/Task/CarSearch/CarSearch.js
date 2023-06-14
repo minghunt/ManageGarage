@@ -260,7 +260,7 @@ const CarSearch = () => {
                             <Col md={2}>Ngày sửa</Col>
                             <Col>Tiền công</Col>
                             <Col>Phụ tùng</Col>
-                            <Col md={2}>Thành tiền</Col>
+                            <Col md={2}>Tổng tiền</Col>
                         </Row>
                         {listPsc.map((item) => (<>
                             <Row style={{
@@ -286,7 +286,7 @@ const CarSearch = () => {
                                         style={{ border: "none" }}
                                     >
                                         {item.ctPhieuSuaChua.map(item2 =>
-                                            <div>{item2.tiencong.MoTa}</div>
+                                            <div>{item2.tiencong.MoTa}: {item2.tiencong.TienCong.toLocaleString('vi', { style: 'currency', currency: 'VND' })}</div>
                                         )}
                                     </Form.Control>
                                 </Col>
@@ -301,12 +301,13 @@ const CarSearch = () => {
                                             const uniquePhuTung = [];
                                             const existsPhuTung = [];
                                             return item.ctPhutungSuaChua.map((item2) => {
-                                                const phuTung = item2.phutung.TenPhuTung;
+                                                const phuTung = {phuTung:item2.phutung,SoLuong:item2.SoLuong};
                                                 if (!existsPhuTung.includes(phuTung)) {
                                                     existsPhuTung.push(phuTung);
                                                     uniquePhuTung.push(phuTung);
                                                 }
-                                            }).concat(uniquePhuTung.map((phuTung) => <div>{phuTung}</div>));
+                                                console.log(phuTung)
+                                            }).concat(uniquePhuTung.map((phuTung) => <div>{phuTung.phuTung.TenPhuTung}: {phuTung.phuTung.DonGia.toLocaleString('vi', { style: 'currency', currency: 'VND' })}x{phuTung.SoLuong}</div>));
                                         })()}
                                     </Form.Control>
 
@@ -341,7 +342,6 @@ const CarSearch = () => {
                                 <Col >
                                     <Form.Control
                                         as="text"
-                                        placeholder="Ngày sửa"
                                         style={{ border: "none" }}
                                         readOnly
                                     >
@@ -363,7 +363,6 @@ const CarSearch = () => {
                                 <Col >
                                     <Form.Control
                                         as="text"
-                                        placeholder="Thành tiền"
                                         style={{ border: "none" }}
                                         readOnly
                                     >
