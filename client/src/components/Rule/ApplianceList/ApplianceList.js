@@ -96,6 +96,12 @@ export default function ApplianceList() {
         DonGia: giaAppli,
         TenPhuTung: tenAppli
       }
+      if (AppliList.filter(item=>item.TenPhuTung===tenAppli).length!==0)
+      {
+        console.log(AppliList.filter(item=>item.TenPhuTung===tenAppli))
+        setOpenWarnDetele(true);
+        return;
+      }
       PhuTungDataService.createPhuTung(Appli)
       console.log(Appli)
       setOpenAdd(false);
@@ -114,6 +120,12 @@ export default function ApplianceList() {
   };
   const handleCloseEditAndUpdate = () => {
     if (tenAppli !== '' && giaAppli > 10000) {
+      if (AppliList.filter(item=>item.TenPhuTung===tenAppli).length!==0)
+      {
+        console.log(AppliList.filter(item=>item.TenPhuTung===tenAppli))
+        setOpenWarnDetele(true);
+        return;
+      }
       let _AppliOnEdit = AppliOnEdit;
       _AppliOnEdit.TenPhuTung = tenAppli;
       _AppliOnEdit.DonGia = giaAppli;
@@ -362,7 +374,7 @@ export default function ApplianceList() {
         open={openWarnDetele}
       >
         <DialogTitle >
-          {"Phụ tùng này đang được sử dụng!"}
+          {"Phụ tùng này đã được sử dụng!"}
         </DialogTitle>
         <DialogActions>
           <Button  onClick={()=>setOpenWarnDetele(false)}>OK</Button>
