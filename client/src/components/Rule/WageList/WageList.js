@@ -93,6 +93,11 @@ export default function WageList(props) {
   };
   const handleCloseAddAndUpdate = () => {
     if (tenTC !== '' && giaTC > 10000) {
+      if (WageList.filter(item=>item.MoTa===tenTC).length!==0)
+      {
+        setOpenWarnDetele(true);
+        return;
+      }
       let Wage = {
         TienCong: giaTC,
         MoTa: tenTC
