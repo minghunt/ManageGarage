@@ -18,6 +18,18 @@ function formatDateToVN(date) {
     let _date = new Date(date)
     return format(_date, 'dd/MM/yyyy', { locale: viLocale });
 }
+function formatDateToYYYYMMDD(inputdate) {
+    let date=new Date(inputdate)
+    const year = date.getFullYear(); // Lấy năm
+    let month = date.getMonth() + 1; // Lấy tháng (tháng được đếm từ 0)
+    let day = date.getDate(); // Lấy ngày
+  
+    // Đảm bảo rằng tháng và ngày có hai chữ số bằng cách thêm '0' nếu cần thiết
+    month = month < 10 ? '0' + month : month;
+    day = day < 10 ? '0' + day : day;
+  
+    return `${year}-${month}-${day}`;
+  }
 const CarReceive = () => {
     const [HxeList, setHxeList] = useState([])
     const [CarList, setCarList] = useState([])
@@ -36,6 +48,8 @@ const CarReceive = () => {
     const [DiaChi, setDiaChi] = useState([])
 
     const [validated, setValidated] = useState(false);
+    const [minDate, setminDate] = useState(formatDateToYYYYMMDD(new Date));
+
     const handleBienSoChange = (e) => {
         setBienSo(e.target.value)
     }
@@ -180,7 +194,7 @@ const CarReceive = () => {
                                 </Form.Group>
                                 <Form.Group as={Col} md="6" controlId="validationCustom04">
                                     <Form.Label>Ngày tiếp nhận</Form.Label>
-                                    <Form.Control type="date" placeholder="Chọn ngày" onChange={handleDateChange} name="begin" required />
+                                    <Form.Control type="date" placeholder="Chọn ngày" min={minDate} onChange={handleDateChange} name="begin" required />
                                     <Form.Control.Feedback type="invalid">
                                         Vui lòng chọn ngày tiếp nhận
                                     </Form.Control.Feedback>
@@ -234,7 +248,6 @@ const CarReceive = () => {
                                 </Col>
                                 <Col xs='2' style={{ borderLeft: 'black 0.5px solid' }}>
                                     {formatDateToVN(item.NgayNhan)}
-
                                 </Col>
                             </Row>)}
                         </div>}

@@ -34,6 +34,7 @@ const CarSearch = () => {
     const [CarOnDetail, setCarOnDetail] = useState(null)
     const [listPsc, setlistPsc] = useState([])
     const [listPthu, setlistPthu] = useState([])
+    const [isLoading, setIsLoading] = useState(false)
 
     const handleBienSoChange = (e) => {
         setBienSo(e.target.value)
@@ -59,6 +60,7 @@ const CarSearch = () => {
 
     }
     const handleSubmitg = () => {
+        setIsLoading(true)
         let _Car = {
             BienSo: BienSo,
             TenKH: TenKH,
@@ -71,6 +73,7 @@ const CarSearch = () => {
         CarDataService.getAllCarFilter(BienSo, TenKH, DienThoai, MaHieuXe, NgayNhan)
             .then((data) => {
                 setCarList(data.data)
+                setIsLoading(false)
             })
     };
     const handleRefresh = () => {
@@ -136,7 +139,6 @@ const CarSearch = () => {
                                 <Form.Group className="mb-3" as={Col} controlId="validationCustom01">
                                     <Form.Label>Tên khách hàng</Form.Label>
                                     <Form.Control
-
                                         type="text"
                                         placeholder="Nhập tên khách hàng" onChange={handleTenKHChange}
                                     />
@@ -157,58 +159,75 @@ const CarSearch = () => {
                         <Button onClick={handleRefresh} style={{ backgroundColor: '#0c828f', border: 'none',marginBottom:'10px',marginLeft:'20px' }} type="submit">Làm mới</Button>
 
                     </Col>
-                    {CarList.length!==0?<Col xs='12' className='CarBrandList-container' style={{margin:'0px ',}} >
-                        <h2>
-                            Danh sách xe
-                        </h2>
-                        <Row style={{ textAlign: 'center', paddingBottom: '10px', fontWeight: '700', paddingRight: '25px' }}>
-                            <Col xs='1' style={{ paddingRight: '5px' }}>
-                                STT
-                            </Col>
-                            <Col >
-                                Biển số
-                            </Col>
-                            <Col >
-                                Hiệu xe
-                            </Col><Col >
-                                Tên khách hàng
-                            </Col>
-                            <Col x>
-                                Số điện thoại
-                            </Col>
+                    {/* {CarList.length!==0? */}
+                    {(() => {
+                        console.log("isLoading: ",isLoading)
+                        console.log("CarList.length: ",CarList.length)
+                        if(isLoading === true) {
+                            return (
+                                <Col xs='12'><LinearProgress color="success"/></Col>
+                                )
+                        } else if(CarList.length === 0 && isLoading === false) {
+                            return (
+                                <h6>Không tìm thấy thông tin xe!</h6>
+                            )
+                        } else {
+                            return (
+                                <Col xs='12' className='CarBrandList-container' style={{margin:'0px ',}} >
+                                    <h2>
+                                        Danh sách xe
+                                    </h2>
+                                    <Row style={{ textAlign: 'center', paddingBottom: '10px', fontWeight: '700', paddingRight: '25px' }}>
+                                        <Col xs='1' style={{ paddingRight: '5px' }}>
+                                            STT
+                                        </Col>
+                                        <Col >
+                                            Biển số
+                                        </Col>
+                                        <Col >
+                                            Hiệu xe
+                                        </Col><Col >
+                                            Tên khách hàng
+                                        </Col>
+                                        <Col x>
+                                            Số điện thoại
+                                        </Col>
 
-                            <Col >
-                                Tiền nợ
-                            </Col>
-                            <Col >
-                                Ngày tiếp nhận
-                            </Col>
-                        </Row>
-                        <div style={{ maxHeight: "500px", overflow: "hidden", overflowY: 'visible', paddingRight: '5px' }}>
-                            {CarList.map((item, key) => <Row onDoubleClick={()=>handleOpenDeltailCar(item)} className="Carlist" style={{ textAlign: 'center', padding: '8xp 10px', lineHeight: '27px', borderBottom: 'black 0.5px solid' }}>
-                                <Col xs='1' style={{ borderLeft: 'black 0.5px solid', paddingRight: '5px' }}>
-                                    {key + 1}
+                                        <Col >
+                                            Tiền nợ
+                                        </Col>
+                                        <Col >
+                                            Ngày tiếp nhận
+                                        </Col>
+                                    </Row>
+                                    <div style={{ maxHeight: "500px", overflow: "hidden", overflowY: 'visible', paddingRight: '5px' }}>
+                                        {CarList.map((item, key) => <Row onDoubleClick={()=>handleOpenDeltailCar(item)} className="Carlist" style={{ textAlign: 'center', padding: '8xp 10px', lineHeight: '27px', borderBottom: 'black 0.5px solid' }}>
+                                            <Col xs='1' style={{ borderLeft: 'black 0.5px solid', paddingRight: '5px' }}>
+                                                {key + 1}
+                                            </Col>
+                                            <Col style={{ borderLeft: 'black 0.5px solid' }}>
+                                                {item.BienSo}
+                                            </Col><Col style={{ borderLeft: 'black 0.5px solid' }}>
+                                                {item.HieuXe.TenHieuXe}
+                                            </Col>
+                                            <Col  style={{ borderLeft: 'black 0.5px solid' }}>
+                                                {item.TenKH}
+                                            </Col>
+                                            <Col  style={{ borderLeft: 'black 0.5px solid' }}>
+                                                {item.DienThoai}
+                                            </Col>
+                                            <Col  style={{ borderLeft: 'black 0.5px solid' }}>
+                                                {item.TienNo.toLocaleString('vi', { style: 'currency', currency: 'VND' })}
+                                            </Col>
+                                            <Col  style={{ borderLeft: 'black 0.5px solid' }}>
+                                                {formatDateToVN(item.NgayNhan)}
+                                            </Col>
+                                        </Row>)}
+                                    </div>
                                 </Col>
-                                <Col style={{ borderLeft: 'black 0.5px solid' }}>
-                                    {item.BienSo}
-                                </Col><Col style={{ borderLeft: 'black 0.5px solid' }}>
-                                    {item.HieuXe.TenHieuXe}
-                                </Col>
-                                <Col  style={{ borderLeft: 'black 0.5px solid' }}>
-                                    {item.TenKH}
-                                </Col>
-                                <Col  style={{ borderLeft: 'black 0.5px solid' }}>
-                                    {item.DienThoai}
-                                </Col>
-                                <Col  style={{ borderLeft: 'black 0.5px solid' }}>
-                                    {item.TienNo.toLocaleString('vi', { style: 'currency', currency: 'VND' })}
-                                </Col>
-                                <Col  style={{ borderLeft: 'black 0.5px solid' }}>
-                                    {formatDateToVN(item.NgayNhan)}
-                                </Col>
-                            </Row>)}
-                        </div>
-                    </Col>:<Col xs='12'><LinearProgress color="success"/></Col>}
+                            )
+                        }
+                    })()}
                 </Row>
             </Container>
             <Dialog className='CarDetail' open={openCarDeltail} style={{ width: '100vw' }}>

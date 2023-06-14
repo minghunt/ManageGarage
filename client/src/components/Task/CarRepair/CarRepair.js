@@ -62,7 +62,9 @@ const RepairForm = () => {
                 PscDataService.getctPSCbyMaXe(data.data[0].MaXe)
                 .then(response => {
                     console.log("response.data: ", response.data)
-                    setListPSC(response.data)
+                    setListPSC(response.data.sort((a, b) =>{ const dateA = new Date(a.NgaySC);
+                        const dateB = new Date(b.NgaySC);
+                        return dateB-dateA}))
                 })
             } else {
                 setShowHistoryButton(false)
@@ -246,7 +248,7 @@ const RepairForm = () => {
                                 setIsLoading(false);
                                 setOpenSuccess(true);
                                 setTimeout(() => {
-                                    //window.location.reload();
+                                    window.location.reload();
                                 }, 1000);
                                 console.log("Tạo phiếu sửa chữa thành công");
                             }
@@ -293,7 +295,7 @@ const RepairForm = () => {
                         <Form.Label column>Ngày sửa chữa:</Form.Label>
                         <Form.Control type="date" name="repairDate" min={formatDateToYYYYMMDD(minDate)} required />
                         <Form.Control.Feedback type="invalid">
-                            Vui lòng chọn ngày tiếp nhận
+                            Vui lòng chọn ngày ngày sửa chữa
                         </Form.Control.Feedback>
                     </Form.Group>
                 </Row>
