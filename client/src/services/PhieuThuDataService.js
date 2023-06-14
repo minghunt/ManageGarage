@@ -9,6 +9,9 @@ class PhieuThuDataService {
     getPhieuThu(){
         return axios.get(`${BASE_URL}/api/phieuthu`)
     }
+    getPhieuThuByMaXe(data){
+        return axios.get(`${BASE_URL}/api/phieuthu/${data}`)
+    }
 }
 
 export default new PhieuThuDataService();

@@ -19,7 +19,16 @@ async function getphieuthu(req, res) {
     res.status(500).json({ error: error.message });
   }
 }
+async function getphieuthuByMaXe(req, res) {
+  try {
+    const _MaXe=req.params.MaXe;
+    const getphieuthu = await phieuthu.find({MaXe:_MaXe})
+    res.status(201).json(getphieuthu);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
 export {
-  createphieuthu,getphieuthu
+  createphieuthu,getphieuthu,getphieuthuByMaXe
 };
 
