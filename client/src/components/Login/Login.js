@@ -363,7 +363,6 @@ const Login = () => {
                 </Modal.Header>
                 <Modal.Body>
                     Tài khoản chưa được đăng ký, đăng nhập bằng tài khoản khác.
-                    Hoặc <Link to='/register'>đăng ký ngay</Link>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button  variant="success" onClick={handleSubmitModalErr}>Đồng ý</Button>
