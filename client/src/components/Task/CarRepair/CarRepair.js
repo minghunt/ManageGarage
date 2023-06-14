@@ -13,6 +13,8 @@ import PscDataService from '../../../services/PscDataService';
 import FullPageLoader from '../../FullPageLoader/FullPageLoader';
 import { MdLibraryAdd, MdDeleteForever } from 'react-icons/md'
 import numeral from 'numeral';
+import viLocale from 'date-fns/locale/vi';
+import { format } from 'date-fns';
 function formatDateToYYYYMMDD(inputdate) {
     let date=new Date(inputdate)
     const year = date.getFullYear(); // Lấy năm
@@ -25,6 +27,10 @@ function formatDateToYYYYMMDD(inputdate) {
   
     return `${year}-${month}-${day}`;
   }
+function formatDateToVN(date) {
+    let _date = new Date(date)
+    return format(_date, 'dd/MM/yyyy', { locale: viLocale });
+}
 const RepairForm = () => {
     const [parts, setParts] = useState([{ MaVatTu: 0, name: "Chọn vật tư", quantity: 0, price: 0, total: 0 }]);
     const [labors, setLabors] = useState([{ MaTienCong: 0, nameLabor: "Chọn tiền công", priceLabor: 0}]);
@@ -43,7 +49,6 @@ const RepairForm = () => {
     const [showHistoryButton, setShowHistoryButton] = useState(false);
     const [listPSC, setListPSC] = useState([]);
     const [openHistory, setOpenHistory] = useState(false);
-    let existsPhuTung = [];
 
     const handleChangelicensePlate = (e) => { 
         CarDataService.getCarByBienSo(e.target.value)
@@ -524,7 +529,7 @@ const RepairForm = () => {
     </Dialog>
 
     <Dialog className='Success' open={openSuccess} onClose={handleCloseSuccess}>
-        <DialogTitle >{"Tạo phiếu sửa chữa thành công! Vui lòng chờ xử lý."}</DialogTitle>
+        <DialogTitle >{"Tạo phiếu sửa chữa thành công!"}</DialogTitle>
         <DialogActions>
             <Button style={{ backgroundColor: '#0c828f', border: 'none' }} onClick={handleCloseSuccess}>OK</Button>
         </DialogActions>
@@ -552,7 +557,7 @@ const RepairForm = () => {
                                 style={{border:"none"}}
                                 readOnly
                             >
-                                {formatDateToYYYYMMDD(item.NgaySC)}
+                                {formatDateToVN(item.NgaySC)}
                             </Form.Control>
                         </Col>
                         <Col>
@@ -574,14 +579,17 @@ const RepairForm = () => {
                             readOnly
                             style={{ border: "none" }}
                             >
-                            {item.ctPhutungSuaChua.map((item2) => {
-                                if (existsPhuTung.includes(item2.phutung.TenPhuTung)) {
-                                    return null;
-                                } else {
-                                    existsPhuTung.push(item2.phutung.TenPhuTung);
-                                    return <div>{item2.phutung.TenPhuTung}</div>;
-                                }
-                            })}
+                            {(() => {
+                                const uniquePhuTung = [];
+                                const existsPhuTung = [];
+                                return item.ctPhutungSuaChua.map((item2) => {
+                                    const phuTung = item2.phutung.TenPhuTung;
+                                    if (!existsPhuTung.includes(phuTung)) {
+                                        existsPhuTung.push(phuTung);
+                                        uniquePhuTung.push(phuTung);
+                                    }
+                                }).concat(uniquePhuTung.map((phuTung) => <div>{phuTung}</div>));
+                            })()}
                         </Form.Control>
 
                         </Col>

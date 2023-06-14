@@ -360,14 +360,17 @@ const CarCheckout = () => {
                                         readOnly
                                         style={{ border: "none" }}
                                     >
-                                        {item.ctPhutungSuaChua.map((item2) => {
-                                            if (existsPhuTung.includes(item2.phutung.TenPhuTung)) {
-                                                return null;
-                                            } else {
-                                                existsPhuTung.push(item2.phutung.TenPhuTung);
-                                                return <div>{item2.phutung.TenPhuTung}</div>;
-                                            }
-                                        })}
+                                        {(() => {
+                                            const uniquePhuTung = [];
+                                            const existsPhuTung = [];
+                                            return item.ctPhutungSuaChua.map((item2) => {
+                                                const phuTung = item2.phutung.TenPhuTung;
+                                                if (!existsPhuTung.includes(phuTung)) {
+                                                    existsPhuTung.push(phuTung);
+                                                    uniquePhuTung.push(phuTung);
+                                                }
+                                            }).concat(uniquePhuTung.map((phuTung) => <div>{phuTung}</div>));
+                                        })()}
                                     </Form.Control>
 
                                 </Col>
