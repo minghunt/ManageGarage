@@ -573,9 +573,9 @@ const RepairForm = () => {
                                     readOnly
                                     style={{ border: "none" }}
                                 >
-                                    {item.ctPhieuSuaChua.map(item2 =>
-                                        <div>{item2.tiencong.MoTa}</div>
-                                    )}
+                                   {item.ctPhieuSuaChua.map(item2 =>
+                                            <div>{item2.tiencong.MoTa}: {item2.tiencong.TienCong.toLocaleString('vi', { style: 'currency', currency: 'VND' })}</div>
+                                        )}
                                 </Form.Control>
                             </Col>
                             <Col>
