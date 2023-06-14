@@ -293,8 +293,9 @@ const CarCheckout = () => {
                 </DialogActions>
             </Dialog>
 
-            <Dialog className='CarDetail' open={openCarDeltail} style={{ width: '100vw' }}>
-            {CarOnDetail===null?<></>:<div style={{ textAlign: 'center' ,marginTop:'10px'}}>
+            <Dialog className='CarDetail' open={openCarDeltail} style={{ width: '100%' }}>
+            {CarOnDetail===null?<></>:
+                <div style={{ textAlign: 'center' ,marginTop:'10px', maxWidth:"1200px"}}>
                     <h1 style={{ color: '#0c828f' }}>Thông tin chi tiết xe của khách hàng {CarOnDetail.TenKH}</h1>
                     <h4 style={{ color: '#0c828f' }}>Biển số: {CarOnDetail.BienSo}</h4>
                     <Row style={{ textAlign: 'center',fontWeight:'600',color: '#0c828f'}}>
@@ -314,8 +315,9 @@ const CarCheckout = () => {
                             Địa chỉ: {CarOnDetail.DiaChi}
                         </Col>
                     </Row>
-                </div>}
-                <DialogContent>
+                </div>
+            }
+                <DialogContent style={{width:"1200px"}}>
             <p style={{fontWeight:"700",fontSize:'22px'}}>Lịch sử sửa chữa</p>
 
             <Form.Group controlId="parts">

@@ -537,9 +537,9 @@ const RepairForm = () => {
         </DialogActions>
     </Dialog>
 
-    <Dialog className='history' open={openHistory} onClose={handleCloseHistory} style={{ width: '100vw' }}>
+    <Dialog className='history' open={openHistory} onClose={handleCloseHistory} style={{ width: '100%' }}>
         <DialogTitle style={{fontWeight:"bolder"}}>{"Lịch sử sửa chữa"}</DialogTitle>
-        <DialogContent>
+        <DialogContent style={{width:"1200px"}}>
             <Form.Group controlId="parts">
                 <Row style={{textAlign:"center", fontWeight:"700"}}>
                     <Col md={2}>Ngày sửa</Col>
