@@ -48,17 +48,22 @@ export default function CarBrandList() {
   };
   const handleCloseAddAndUpdate = () => {
     console.log("gj",HxeList)
-
+    const compare = HxeList.filter(item => item.TenHieuXe === tenHxeNew)
+    console.log("compare.length: ", compare.length)
     if(tenHxeNew!==''&&tenHxeNew!==null){
-    CarBrandDataService.createCarBrand(tenHxeNew)
-    setOpenAdd(false);
-    setTimeout(()=>{setReload(!reload);},300)}
-    else {
+      if(compare.length === 0) {
+        CarBrandDataService.createCarBrand(tenHxeNew)
+        setOpenAdd(false);
+        setTimeout(() => {
+          setReload(!reload);
+        },300)
+      } else {
+        setOpenWarnDetele(true)
+      }
+    } else {
       setOpenWarn(true);
-
     }
     setTenHxeNew('')
-
   };
 
 
@@ -73,21 +78,25 @@ export default function CarBrandList() {
   const handleCloseEditAndUpdate = () => {
     // const index = HxeList.findIndex(item => item._id === HxeOnEdit._id);
     // HxeList[index].TenHieuXe = tenHxeNew;
+    const compare = HxeList.filter(item => item.TenHieuXe === tenHxeNew)
     if (tenHxeNew!==''){
-    let _hxe=HxeOnEdit;
-    _hxe.TenHieuXe=tenHxeNew;
-    setHxeOnEdit(_hxe);
-
-    CarBrandDataService.updateCarBrand(_hxe)
-    console.log(HxeOnEdit)
-    setOpenEdit(false);
-    setTimeout(()=>{setReload(!reload);},300)
+      if(compare.length === 0) {
+        let _hxe=HxeOnEdit;
+        _hxe.TenHieuXe=tenHxeNew;
+        setHxeOnEdit(_hxe);
+    
+        CarBrandDataService.updateCarBrand(_hxe)
+        console.log(HxeOnEdit)
+        setOpenEdit(false);
+        setTimeout(()=>{setReload(!reload);},300)
+      } else {
+        setOpenWarnDetele(true)
+      }
     }
     else {
       setOpenWarn(true);
     }
     setTenHxeNew('')
-
   }
   
   
@@ -239,7 +248,7 @@ export default function CarBrandList() {
         open={openWarnDetele}
       >
         <DialogTitle >
-          {"Hiệu xe này đang được sử dụng!"}
+          {"Hiệu xe này đã được sử dụng!"}
         </DialogTitle>
         <DialogActions>
           <Button  onClick={()=>setOpenWarnDetele(false)}>OK</Button>
