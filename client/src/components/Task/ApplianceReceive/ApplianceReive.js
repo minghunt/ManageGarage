@@ -228,7 +228,7 @@ const ApplianceReceive = () => {
                                             </Col> : <Col md={3}>
                                                 <Form.Control
                                                     type="number" min="1000"
-                                                    step="5000"  value={part.price}
+                                                    step="500"  value={part.price}
                                                     onChange={(event) => handlePriceChange(index, event)} />
                                             </Col>}
 

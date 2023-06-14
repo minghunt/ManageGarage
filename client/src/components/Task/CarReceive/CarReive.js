@@ -221,8 +221,6 @@ const CarReceive = () => {
                             </Col><Col xs='3'>
                                 Tên khách hàng
                             </Col>
-
-
                             <Col xs='2'>
                                 Số điện thoại
                             </Col>
