@@ -108,6 +108,7 @@ const RepairForm = () => {
                 return;
             } else {
                 updatedParts[index].MaPhuTung = listPhuTung[value].MaPhuTung;
+                updatedParts[index].SoLuongTon = listPhuTung[value].SoLuongTon;
                 updatedParts[index].name = listPhuTung[value].TenPhuTung;
                 updatedParts[index].price = listPhuTung[value].DonGia;
                 updatedParts[index].total = updatedParts[index].price * updatedParts[index].quantity;
@@ -457,6 +458,7 @@ const RepairForm = () => {
                                                 name="quantity"
                                                 placeholder="Số lượng"
                                                 min="1"
+                                                max={part.SoLuongTon}
                                                 value={part.quantity}
                                                 onChange={(event) => handleInputChange(index, event)}
                                                 required
